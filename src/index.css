@@ -1,0 +1,30 @@
+/* Placeholder styles. Replace with the real design system once the visual direction is chosen. */
+:root {
+  --color-bg: #14121a;
+  --color-fg: #ece8f3;
+  --color-muted: #9a93ad;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-body);
+  line-height: 1.5;
+}
+
+.shell {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+}
+
+.tagline,
+.status {
+  color: var(--color-muted);
+}
