@@ -1,8 +1,8 @@
-import type { AppState } from "../lib/types.ts";
+import type { AppState, Goal } from "../lib/types.ts";
 import { createDemoState } from "./demo.ts";
 
 const KEY_REAL = "manifest.v1";
-const KEY_DEMO = "manifest.demo.v1";
+const KEY_DEMO = "manifest.demo.v2";
 const KEY_MODE = "manifest.mode";
 
 export function emptyState(): AppState {
@@ -29,7 +29,12 @@ function normalize(raw: unknown): AppState | null {
   const o = raw as Partial<AppState>;
   const base = emptyState();
   return {
-    goals: Array.isArray(o.goals) ? o.goals : base.goals,
+    // Older saves have no why, where, byDate, or tint on goals. Fill them in.
+    goals: Array.isArray(o.goals)
+      ? o.goals.map(
+          (g: Partial<Goal>) => ({ why: "", where: "", byDate: "", tint: "peach", ...g }) as Goal,
+        )
+      : base.goals,
     claims: Array.isArray(o.claims) ? o.claims : base.claims,
     entries: Array.isArray(o.entries) ? o.entries : base.entries,
     checkins: Array.isArray(o.checkins) ? o.checkins : base.checkins,

@@ -25,6 +25,8 @@
   (`{ "error": "message" }`) and an appropriate status code.
 - Prompts sent to the LLM live in `api/_lib/prompts.ts` so they can be reviewed.
 - Every AI feature has a deterministic local fallback in `src/lib` (claim drafting, Council letters).
+- Styling: one stylesheet, `src/index.css`, with CSS variables. Colors come from `.tint-*` classes
+  (peach, sage, butter, lavender, sky, rose). Illustrations and icons are inline SVG, no image files.
 - Evidence windows are rolling: day = today, week = last 7 days, month = last 30 days.
 - Never log journal text or API keys.
 

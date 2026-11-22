@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
-import { CharterView } from "./components/CharterView.tsx";
-import { CouncilView } from "./components/CouncilView.tsx";
+import { DreamsView } from "./components/DreamsView.tsx";
 import { Header } from "./components/Header.tsx";
-import { LogView } from "./components/LogView.tsx";
-import { ReportView } from "./components/ReportView.tsx";
-import { TodayView } from "./components/TodayView.tsx";
+import { Home } from "./components/Home.tsx";
+import { JournalView } from "./components/JournalView.tsx";
+import { LettersView } from "./components/LettersView.tsx";
+import { ProgressView } from "./components/ProgressView.tsx";
 import type { View } from "./components/ui.tsx";
 import { DEMO_PERSONA } from "./data/demo.ts";
 import { computeModel } from "./data/selectors.ts";
@@ -13,7 +13,7 @@ import { todayISO } from "./lib/dates.ts";
 
 export default function App() {
   const app = useApp();
-  const [view, setView] = useState<View>("today");
+  const [view, setView] = useState<View>("home");
   const today = todayISO();
   const model = useMemo(() => computeModel(app.state, today), [app.state, today]);
 
@@ -29,41 +29,46 @@ export default function App() {
         onView={go}
         demo={app.demo}
         persona={DEMO_PERSONA}
-        onExitDemo={() => app.setDemo(false)}
+        onExitDemo={() => {
+          app.setDemo(false);
+          go("home");
+        }}
       />
       <main className="main">
-        {view === "today" && <TodayView app={app} model={model} today={today} goTo={go} />}
-        {view === "charter" && <CharterView app={app} />}
-        {view === "report" && <ReportView app={app} model={model} goTo={go} />}
-        {view === "council" && <CouncilView app={app} model={model} today={today} />}
-        {view === "log" && <LogView app={app} />}
+        {view === "home" && <Home app={app} model={model} today={today} goTo={go} />}
+        {view === "dreams" && <DreamsView app={app} model={model} today={today} />}
+        {view === "journal" && <JournalView app={app} model={model} today={today} goTo={go} />}
+        {view === "progress" && <ProgressView app={app} model={model} today={today} goTo={go} />}
+        {view === "letters" && <LettersView app={app} model={model} today={today} />}
       </main>
       <footer className="footer">
-        <span>Your journal stays in this browser.</span>
-        {app.demo ? (
-          <button type="button" className="link" onClick={() => app.setDemo(true)}>
-            Reset demo
-          </button>
-        ) : (
-          <>
+        <span>Made with love. Your journal stays on this device.</span>
+        <span className="footer-links">
+          {app.demo ? (
             <button type="button" className="link" onClick={() => app.setDemo(true)}>
-              Try the demo
+              Reset demo
             </button>
-            <button
-              type="button"
-              className="link danger"
-              onClick={() => {
-                if (
-                  window.confirm("Erase everything saved in this browser? This cannot be undone.")
-                ) {
-                  app.erase();
-                }
-              }}
-            >
-              Erase my data
-            </button>
-          </>
-        )}
+          ) : (
+            <>
+              <button type="button" className="link" onClick={() => app.setDemo(true)}>
+                Peek at a demo
+              </button>
+              <button
+                type="button"
+                className="link danger"
+                onClick={() => {
+                  if (
+                    window.confirm("Erase everything saved on this device? This can't be undone.")
+                  ) {
+                    app.erase();
+                  }
+                }}
+              >
+                Erase my data
+              </button>
+            </>
+          )}
+        </span>
       </footer>
     </div>
   );

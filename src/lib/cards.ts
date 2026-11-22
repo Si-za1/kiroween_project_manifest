@@ -1,64 +1,86 @@
 import type { Conflict } from "./conflicts.ts";
 import { hashString } from "./ids.ts";
 import type { ClaimResult } from "./score.ts";
-import type { ISODate } from "./types.ts";
+import type { ISODate, Tint } from "./types.ts";
+
+export type IconName =
+  | "seed"
+  | "keepsake"
+  | "crossroads"
+  | "sunrise"
+  | "mend"
+  | "page"
+  | "whisper"
+  | "spark"
+  | "mirror"
+  | "step"
+  | "sun";
 
 export interface Card {
   id: string;
   numeral: string;
   title: string;
-  glyph: string;
+  icon: IconName;
+  tint: Tint;
   prompt: string;
 }
 
 const BASE: Omit<Card, "numeral">[] = [
   {
-    id: "unmerged-branch",
-    title: "The Unmerged Branch",
-    glyph: "⑂",
-    prompt: "What have you started but not yet brought into your life?",
+    id: "seed",
+    title: "The Seed",
+    icon: "seed",
+    tint: "sage",
+    prompt: "What have you started that you'd love to see bloom?",
   },
   {
-    id: "stash",
-    title: "The Stash",
-    glyph: "◫",
-    prompt: "What are you holding aside for later that deserves some attention today?",
+    id: "keepsake",
+    title: "The Keepsake",
+    icon: "keepsake",
+    tint: "rose",
+    prompt: "What are you saving for later that deserves a little love today?",
   },
   {
-    id: "fork",
-    title: "The Fork",
-    glyph: "⑃",
-    prompt: "Where did you face two paths today? Which one did you take, and why?",
+    id: "crossroads",
+    title: "The Crossroads",
+    icon: "crossroads",
+    tint: "sky",
+    prompt: "Where did you choose between two paths today? What made you pick yours?",
   },
   {
-    id: "rebase",
-    title: "The Rebase",
-    glyph: "↺",
-    prompt: "If you could rewrite how today began, what would the first hour look like?",
+    id: "sunrise",
+    title: "The Sunrise",
+    icon: "sunrise",
+    tint: "butter",
+    prompt: "If tomorrow could begin any way you like, what would the first hour look like?",
   },
   {
-    id: "hotfix",
-    title: "The Hotfix",
-    glyph: "✚",
-    prompt: "What one small repair would make tomorrow easier?",
+    id: "mend",
+    title: "The Mend",
+    icon: "mend",
+    tint: "peach",
+    prompt: "What one small fix would make tomorrow feel lighter?",
   },
   {
-    id: "fresh-clone",
-    title: "The Fresh Clone",
-    glyph: "◌",
-    prompt: "If you started from zero today, what is the first thing you would keep?",
+    id: "page",
+    title: "The Blank Page",
+    icon: "page",
+    tint: "lavender",
+    prompt: "If you could start fresh today, what's the first thing you would keep?",
   },
   {
-    id: "quiet-daemon",
-    title: "The Quiet Daemon",
-    glyph: "☾",
-    prompt: "What runs in the background of your mind that you have not named yet?",
+    id: "whisper",
+    title: "The Whisper",
+    icon: "whisper",
+    tint: "lavender",
+    prompt: "What's been quietly on your mind that you haven't said out loud yet?",
   },
   {
-    id: "lightning-rod",
-    title: "The Lightning Rod",
-    glyph: "⚡",
-    prompt: "What gave you energy today, and what drained it?",
+    id: "spark",
+    title: "The Spark",
+    icon: "spark",
+    tint: "butter",
+    prompt: "What gave you energy today, and what took it away?",
   },
 ];
 
@@ -68,7 +90,7 @@ function numeral(n: number): string {
   return ROMAN[n] ?? String(n);
 }
 
-export const DECK_SIZE = BASE.length + 4;
+export const DECK_SIZE = BASE.length + 3;
 
 interface DrawInput {
   date: ISODate;
@@ -77,18 +99,19 @@ interface DrawInput {
 }
 
 /**
- * Deterministic daily draw. The same date and the same state always give the same card, so the card
- * does not change when the page reloads. Special cards come from the user's own results.
+ * Daily draw. The same date and the same state always give the same card, so the card does not
+ * change on reload. Special cards come from the user's own progress.
  */
 export function drawCard({ date, results, conflicts }: DrawInput): Card {
   const firstConflict = conflicts[0];
   if (firstConflict) {
     return {
-      id: "merge-conflict",
+      id: "mirror",
       numeral: numeral(BASE.length + 1),
-      title: "The Merge Conflict",
-      glyph: "⚔",
-      prompt: `${firstConflict.title}. Two versions of you disagree. Write down each one's side, then decide which one you want to merge in.`,
+      title: "The Mirror",
+      icon: "mirror",
+      tint: "sky",
+      prompt: `${firstConflict.title}. What would you tell a friend who said the same thing?`,
     };
   }
 
@@ -98,26 +121,27 @@ export function drawCard({ date, results, conflicts }: DrawInput): Card {
   const worst = behind[0];
   if (worst) {
     return {
-      id: "broken-test",
+      id: "tiny-step",
       numeral: numeral(BASE.length + 2),
-      title: "The Broken Test",
-      glyph: "✕",
-      prompt: `"${worst.claim.metric}" is not passing yet. Without blame: what is the smallest version of it you could do today?`,
+      title: "The Tiny Step",
+      icon: "step",
+      tint: "peach",
+      prompt: `What's the smallest, easiest version of "${worst.claim.metric}" you could do today?`,
     };
   }
 
   if (results.length > 0) {
     return {
-      id: "green-build",
+      id: "sun",
       numeral: numeral(BASE.length + 3),
-      title: "The Green Build",
-      glyph: "✓",
-      prompt: "Everything is passing. What made that possible, and how do you protect it?",
+      title: "The Sun",
+      icon: "sun",
+      tint: "butter",
+      prompt: "Every step is on track. What helped, and how can you keep it going?",
     };
   }
 
   const pick = BASE[hashString(date) % BASE.length];
   if (!pick) throw new Error("Deck is empty");
-  const index = BASE.indexOf(pick) + 1;
-  return { ...pick, numeral: numeral(index) };
+  return { ...pick, numeral: numeral(BASE.indexOf(pick) + 1) };
 }

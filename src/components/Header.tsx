@@ -1,3 +1,4 @@
+import { Icon } from "./Icons.tsx";
 import { VIEWS } from "./ui.tsx";
 import type { View } from "./ui.tsx";
 
@@ -12,41 +13,45 @@ interface Props {
 export function Header({ view, onView, demo, persona, onExitDemo }: Props) {
   return (
     <header className="header">
+      {demo ? (
+        <div className="demo-bar">
+          <span>
+            You're peeking into <strong>{persona}'s</strong> demo journal.
+          </span>
+          <button type="button" className="link" onClick={onExitDemo}>
+            Start my own
+          </button>
+        </div>
+      ) : null}
       <div className="header-row">
         <a
-          className="wordmark"
+          className="brand"
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            onView("today");
+            onView("home");
           }}
         >
-          Manifest<span className="wordmark-git">.git</span>
+          <span className="brand-mark" aria-hidden="true">
+            <Icon name="spark" size={18} />
+          </span>
+          Manifest
         </a>
-        {demo ? (
-          <div className="demo-pill">
-            <span>Demo mode · {persona}</span>
-            <button type="button" className="link" onClick={onExitDemo}>
-              Exit demo
+        <nav className="tabs" aria-label="Main">
+          {VIEWS.map((v) => (
+            <button
+              key={v.id}
+              type="button"
+              className={`tab${view === v.id ? " is-active" : ""}`}
+              aria-current={view === v.id ? "page" : undefined}
+              onClick={() => onView(v.id)}
+            >
+              <Icon name={v.icon} size={17} />
+              <span>{v.label}</span>
             </button>
-          </div>
-        ) : null}
+          ))}
+        </nav>
       </div>
-      <nav className="nav" aria-label="Main">
-        {VIEWS.map((v) => (
-          <button
-            key={v.id}
-            type="button"
-            title={v.hint}
-            className={`nav-item${view === v.id ? " is-active" : ""}`}
-            aria-current={view === v.id ? "page" : undefined}
-            onClick={() => onView(v.id)}
-          >
-            {v.label}
-          </button>
-        ))}
-      </nav>
-      <div className="spark-line" aria-hidden="true" />
     </header>
   );
 }

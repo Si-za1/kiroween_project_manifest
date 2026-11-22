@@ -1,46 +1,68 @@
+import type { Card } from "../lib/cards.ts";
 import type { ClaimDraft } from "../lib/claims.ts";
 import { isPeriod, isSource, isValue } from "../lib/claims.ts";
+import { selfById } from "../lib/council.ts";
 import { newId, shortHash } from "../lib/ids.ts";
-import type { Card } from "../lib/cards.ts";
+import { TINTS } from "../lib/types.ts";
 import type {
   AppState,
   CalendarEvent,
   Claim,
+  Goal,
   ISODate,
   Letter,
   SelfId,
-  Value,
 } from "../lib/types.ts";
-import { SELVES } from "../lib/council.ts";
 
-export function addGoal(state: AppState, text: string, draft: ClaimDraft, now: Date): AppState {
+export type DreamInput = Pick<Goal, "text" | "why" | "where" | "byDate" | "tint" | "value">;
+
+function makeStep(goalId: string, draft: ClaimDraft): Claim {
+  return {
+    id: newId("claim"),
+    goalId,
+    metric: draft.metric,
+    target: draft.target,
+    period: draft.period,
+    source: draft.source,
+    keyword: draft.keyword,
+    confirmed: true,
+  };
+}
+
+export function addDream(
+  state: AppState,
+  input: DreamInput,
+  steps: ClaimDraft[],
+  now: Date,
+): AppState {
   const goalId = newId("goal");
+  const goal: Goal = {
+    id: goalId,
+    text: input.text.trim().slice(0, 200),
+    why: input.why.trim().slice(0, 1000),
+    where: input.where.trim().slice(0, 120),
+    byDate: input.byDate,
+    tint: (TINTS as readonly string[]).includes(input.tint) ? input.tint : "peach",
+    value: isValue(input.value) ? input.value : "peace",
+    createdAt: now.toISOString(),
+    archived: false,
+  };
   return {
     ...state,
-    goals: [
-      ...state.goals,
-      {
-        id: goalId,
-        text: text.trim(),
-        value: draft.value,
-        createdAt: now.toISOString(),
-        archived: false,
-      },
-    ],
-    claims: [
-      ...state.claims,
-      {
-        id: newId("claim"),
-        goalId,
-        metric: draft.metric,
-        target: draft.target,
-        period: draft.period,
-        source: draft.source,
-        keyword: draft.keyword,
-        confirmed: false,
-      },
-    ],
+    goals: [...state.goals, goal],
+    claims: [...state.claims, ...steps.map((s) => makeStep(goalId, s))],
   };
+}
+
+export function updateDream(state: AppState, goalId: string, patch: Partial<DreamInput>): AppState {
+  return {
+    ...state,
+    goals: state.goals.map((g) => (g.id === goalId ? { ...g, ...patch } : g)),
+  };
+}
+
+export function addStep(state: AppState, goalId: string, draft: ClaimDraft): AppState {
+  return { ...state, claims: [...state.claims, makeStep(goalId, draft)] };
 }
 
 export type ClaimPatch = Partial<
@@ -48,24 +70,24 @@ export type ClaimPatch = Partial<
 >;
 
 export function updateClaim(state: AppState, claimId: string, patch: ClaimPatch): AppState {
+  if (patch.period !== undefined && !isPeriod(patch.period)) return state;
+  if (patch.source !== undefined && !isSource(patch.source)) return state;
+  if (patch.target !== undefined && !(patch.target > 0 && patch.target <= 10_000)) return state;
   return {
     ...state,
-    claims: state.claims.map((c) => {
-      if (c.id !== claimId) return c;
-      const next = { ...c, ...patch };
-      if (patch.period !== undefined && !isPeriod(patch.period)) return c;
-      if (patch.source !== undefined && !isSource(patch.source)) return c;
-      return next;
-    }),
+    claims: state.claims.map((c) => (c.id === claimId ? { ...c, ...patch } : c)),
   };
 }
 
-export function setGoalValue(state: AppState, goalId: string, value: Value): AppState {
-  if (!isValue(value)) return state;
-  return { ...state, goals: state.goals.map((g) => (g.id === goalId ? { ...g, value } : g)) };
+export function deleteStep(state: AppState, claimId: string): AppState {
+  return {
+    ...state,
+    claims: state.claims.filter((c) => c.id !== claimId),
+    checkins: state.checkins.filter((c) => c.claimId !== claimId),
+  };
 }
 
-export function deleteGoal(state: AppState, goalId: string): AppState {
+export function deleteDream(state: AppState, goalId: string): AppState {
   const removed = new Set(state.claims.filter((c) => c.goalId === goalId).map((c) => c.id));
   return {
     ...state,
@@ -142,22 +164,19 @@ export function addLetters(
   now: Date,
 ): AppState {
   const batchId = newId("batch");
-  const created = letters.flatMap((l): Letter[] => {
-    const self = SELVES.find((s) => s.id === l.selfId);
-    if (!self) return [];
-    return [
-      {
-        id: newId("letter"),
-        batchId,
-        selfId: self.id,
-        years: self.years,
-        name: self.name,
-        text: l.text,
-        origin,
-        createdAt: now.toISOString(),
-        reply: "",
-      },
-    ];
+  const created = letters.map((l): Letter => {
+    const self = selfById(l.selfId);
+    return {
+      id: newId("letter"),
+      batchId,
+      selfId: self.id,
+      years: self.years,
+      name: self.name,
+      text: l.text,
+      origin,
+      createdAt: now.toISOString(),
+      reply: "",
+    };
   });
   return { ...state, letters: [...state.letters, ...created] };
 }

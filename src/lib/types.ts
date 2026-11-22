@@ -4,20 +4,31 @@ export type Period = (typeof PERIODS)[number];
 export const SOURCES = ["checkin", "github", "calendar"] as const;
 export type Source = (typeof SOURCES)[number];
 
+/** Life areas. Shown to users as Growth, Love, and Wellbeing. */
 export const VALUES = ["ambition", "connection", "peace"] as const;
 export type Value = (typeof VALUES)[number];
+
+export const TINTS = ["peach", "sage", "butter", "lavender", "sky", "rose"] as const;
+export type Tint = (typeof TINTS)[number];
 
 /** Calendar date as YYYY-MM-DD in the user's local time. */
 export type ISODate = string;
 
+/** A dream: something the user wants to manifest. */
 export interface Goal {
   id: string;
   text: string;
+  why: string;
+  where: string;
+  /** Target date, or "" for "someday". */
+  byDate: ISODate | "";
+  tint: Tint;
   value: Value;
   createdAt: string;
   archived: boolean;
 }
 
+/** A little step toward a dream: a habit with a number, a time window, and a way to track it. */
 export interface Claim {
   id: string;
   goalId: string;
@@ -42,7 +53,7 @@ export interface Entry {
   hash: string;
 }
 
-/** A self-reported amount for one claim on one day. */
+/** A self-reported amount for one step on one day. */
 export interface CheckIn {
   claimId: string;
   date: ISODate;

@@ -8,9 +8,10 @@
   agents/      Custom agents
 api/           Vercel Functions: claim, council, github. Shared code in api/_lib
 src/
-  components/  React UI components (one file per view)
+  components/  React UI: Home, DreamsView, JournalView, ProgressView, LettersView, plus
+               Header, Steps, TarotCard, Illustration (SVG), Icons (SVG), ui (shared bits)
   lib/         Pure logic (no React, no browser APIs): claims, score, conflicts, cards,
-               voice, council, ics, dates, api client
+               voice, council, stats, ics, dates, api client
   data/        Storage, state actions, selectors, demo persona, useApp hook
   App.tsx
   main.tsx

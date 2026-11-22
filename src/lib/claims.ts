@@ -84,6 +84,9 @@ const NUM_WORDS: Record<string, number> = {
   ten: 10,
 };
 
+const QTY_RE =
+  /\b(\d+(?:\.\d+)?|once|twice|thrice|one|two|three|four|five|six|seven|eight|nine|ten)\s*(?:x|×|times?|nights?|days?|sessions?|mornings?|evenings?)?\s+(?:a|per|each|every)\s+(day|week|month)\b/i;
+
 const STOP = new Set([
   "i",
   "me",
@@ -174,10 +177,18 @@ export function draftFromGoal(text: string): ClaimDraft {
     weekday = true;
   }
 
+  // Prefer a number right before a period phrase, e.g. "5 nights a week" or "twice a month".
+  const qty = QTY_RE.exec(text);
   let target: number | null = null;
+  if (qty) {
+    const n = qty[1]?.toLowerCase() ?? "";
+    target = n in NUM_WORDS ? (NUM_WORDS[n] ?? null) : Number(n);
+    const p = qty[2]?.toLowerCase();
+    if (isPeriod(p)) period = p;
+  }
   const digit = /(\d+(?:\.\d+)?)/.exec(t);
-  if (digit) target = Number(digit[1]);
-  else {
+  if (target === null && digit) target = Number(digit[1]);
+  if (target === null) {
     for (const [word, n] of Object.entries(NUM_WORDS)) {
       if (new RegExp(`\\b${word}\\b`).test(t)) {
         target = n;
@@ -206,12 +217,13 @@ export function draftFromGoal(text: string): ClaimDraft {
   if (source === "github") keyword = "commit";
   if (source === "calendar" && t.includes("deepwork")) keyword = "deep work";
 
-  let metric = text
+  // With a quantity phrase, remove just that phrase so numbers like "by 11" survive.
+  // Without one, strip every number and period word.
+  const QUANTITY_WORDS =
+    /\b(\d+(\.\d+)?|once|twice|thrice|times?|more|a week|per week|every \w+|each \w+|daily|weekly|monthly|a day|a month|per day|per month)\b/gi;
+  let metric = (qty ? text.replace(qty[0], " ") : text.replace(QUANTITY_WORDS, ""))
     .replace(/^\s*(i (want|will|would like|'d like) to|to)\s+/i, "")
-    .replace(
-      /\b(\d+(\.\d+)?|once|twice|thrice|times?|more|a week|per week|every \w+|each \w+|daily|weekly|monthly|a day|a month|per day|per month)\b/gi,
-      "",
-    )
+    .replace(/\bmore\b/gi, "")
     .replace(/\s+/g, " ")
     .replace(/^[\s,.:;-]+|[\s,.:;-]+$/g, "");
   if (source === "github") metric = "commits";

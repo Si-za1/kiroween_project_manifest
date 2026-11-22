@@ -57,3 +57,14 @@ _Planned: GitHub CLI power for the repo workflow, Playwright for demo screenshot
   do not have, so every stored claim would have failed validation. A second run showed two
   overlapping conflicts for one claim, so the stronger one now replaces the weaker one. Both are
   good property-based test targets.
+
+- **Redesign from user feedback.** The first look was dark, used git words, and felt discouraging.
+  The redesign moved to a warm "cozy journal" style: plain words, tabs at the top, a hand-drawn SVG
+  illustration, a journal-style dream composer, a calendar view, a dream timeline, and a habit dot
+  grid. The steering file `voice-and-tone.md` now holds a glossary that maps code terms to UI
+  words, so later changes keep the plain language.
+- **Seeing the UI without npm.** The sandbox could not install React, so a scratch harness
+  (not committed) bundled the real app with Bun and a 150-line React stand-in, then took screenshots
+  with the agent-browser tool. This caught real problems that typechecking could not: a missing icon
+  glyph, a header band that didn't fit wrapped titles, cut-off step counts, and letters that
+  repeated themselves and mixed up which dream a step belonged to.

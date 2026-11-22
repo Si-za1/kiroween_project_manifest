@@ -1,13 +1,14 @@
 import { addDays } from "../lib/dates.ts";
 import { shortHash } from "../lib/ids.ts";
-import type { AppState, Entry, Goal, Claim, CheckIn, ISODate } from "../lib/types.ts";
+import type { AppState, CheckIn, Claim, Entry, Goal, ISODate } from "../lib/types.ts";
 
 export const DEMO_PERSONA = "Maya";
 
 /**
- * A pre-filled persona so anyone can explore the app with no setup. All dates are relative to
- * today, so the report always looks alive. It is designed to show one honest conflict:
- * "workout" appears in the journal often, but check-ins and evidence say otherwise.
+ * A ready-made journal so anyone can explore the app with no setup. Dates are relative to today, so
+ * it always looks current. It is built to show a mix of wins, near misses, and two gentle nudges:
+ * Maya writes about running a lot but has only run once, and she ticked off more studio sessions
+ * than her calendar shows.
  */
 export function createDemoState(today: ISODate): AppState {
   const day = (back: number): ISODate => addDays(today, -back);
@@ -16,60 +17,86 @@ export function createDemoState(today: ISODate): AppState {
 
   const goals: Goal[] = [
     {
-      id: "g_ship",
-      text: "Ship my side project, 5 commits a week",
+      id: "g_shop",
+      text: "Open my little pottery shop online",
+      why: "I want my hands and my work to finally meet. Every bowl I make feels like a tiny piece of who I am.",
+      where: "My corner studio at home",
+      byDate: addDays(today, 120),
+      tint: "peach",
       value: "ambition",
       createdAt: iso(20),
       archived: false,
     },
     {
-      id: "g_move",
-      text: "Work out 3 times a week",
+      id: "g_run",
+      text: "Run my first 10K",
+      why: "To feel strong in my own body, and to prove to myself that I can finish things.",
+      where: "The river path, early mornings",
+      byDate: addDays(today, 200),
+      tint: "sage",
       value: "peace",
       createdAt: iso(20),
       archived: false,
     },
     {
-      id: "g_mom",
-      text: "Call mom every Sunday",
+      id: "g_family",
+      text: "Feel close to my family again",
+      why: "Life got busy and I miss them. I want Sunday calls to feel normal, not rare.",
+      where: "",
+      byDate: "",
+      tint: "rose",
       value: "connection",
       createdAt: iso(20),
       archived: false,
     },
     {
-      id: "g_deep",
-      text: "Protect 4 deep work blocks a week",
-      value: "ambition",
-      createdAt: iso(20),
+      id: "g_sleep",
+      text: "Sleep like it's a priority",
+      why: "Everything feels easier when I'm rested.",
+      where: "",
+      byDate: addDays(today, 45),
+      tint: "lavender",
+      value: "peace",
+      createdAt: iso(14),
       archived: false,
     },
   ];
 
   const claims: Claim[] = [
     {
-      id: "c_ship",
-      goalId: "g_ship",
-      metric: "commits",
-      target: 5,
+      id: "c_studio",
+      goalId: "g_shop",
+      metric: "studio sessions",
+      target: 4,
       period: "week",
-      source: "github",
-      keyword: "commit",
+      source: "calendar",
+      keyword: "studio",
       confirmed: true,
     },
     {
-      id: "c_move",
-      goalId: "g_move",
-      metric: "workouts",
+      id: "c_list",
+      goalId: "g_shop",
+      metric: "list a new piece",
+      target: 1,
+      period: "week",
+      source: "checkin",
+      keyword: "list",
+      confirmed: true,
+    },
+    {
+      id: "c_run",
+      goalId: "g_run",
+      metric: "runs",
       target: 3,
       period: "week",
       source: "checkin",
-      keyword: "workout",
+      keyword: "run",
       confirmed: true,
     },
     {
       id: "c_mom",
-      goalId: "g_mom",
-      metric: "calls with mom",
+      goalId: "g_family",
+      metric: "call mom",
       target: 1,
       period: "week",
       source: "checkin",
@@ -77,98 +104,113 @@ export function createDemoState(today: ISODate): AppState {
       confirmed: true,
     },
     {
-      id: "c_deep",
-      goalId: "g_deep",
-      metric: "deep work blocks",
-      target: 4,
+      id: "c_dinner",
+      goalId: "g_family",
+      metric: "dinner with friends",
+      target: 2,
+      period: "month",
+      source: "checkin",
+      keyword: "dinner",
+      confirmed: true,
+    },
+    {
+      id: "c_bed",
+      goalId: "g_sleep",
+      metric: "in bed by 11",
+      target: 5,
       period: "week",
-      source: "calendar",
-      keyword: "deep work",
+      source: "checkin",
+      keyword: "bed",
       confirmed: true,
     },
   ];
 
-  const githubDays: Record<ISODate, number> = {
-    [day(6)]: 0,
-    [day(5)]: 1,
-    [day(3)]: 1,
-    [day(9)]: 4,
-    [day(10)]: 3,
-  };
-
-  const checkins: CheckIn[] = [
-    // Maya reports shipping every day, but GitHub shows 2 commits in 7 days.
-    { claimId: "c_ship", date: day(5), amount: 1 },
-    { claimId: "c_ship", date: day(4), amount: 1 },
-    { claimId: "c_ship", date: day(3), amount: 1 },
-    { claimId: "c_ship", date: day(2), amount: 1 },
-    { claimId: "c_ship", date: day(1), amount: 1 },
-    { claimId: "c_move", date: day(4), amount: 1 },
-    { claimId: "c_mom", date: day(2), amount: 1 },
+  const ticks: [string, number[]][] = [
+    ["c_studio", [1, 2, 4, 5, 8, 10, 12]], // 4 in the last 7 days, but the calendar shows 2
+    ["c_list", [3, 10]],
+    ["c_run", [4, 9, 11, 13]],
+    ["c_mom", [2, 9]],
+    ["c_dinner", [6]],
+    ["c_bed", [0, 1, 3, 5, 6, 8, 9, 12]],
   ];
+  const checkins: CheckIn[] = ticks.flatMap(([claimId, backs]) =>
+    backs.map((b) => ({ claimId, date: day(b), amount: 1 })),
+  );
 
-  const texts: {
+  const pages: {
     back: number;
     mood: 1 | 2 | 3 | 4 | 5;
-    text: string;
     card: [string, string, string];
+    text: string;
   }[] = [
     {
-      back: 6,
+      back: 12,
       mood: 3,
-      card: ["fork", "The Fork", "Where did you face two paths today?"],
-      text: "Slow start. I keep saying I will do a workout in the morning, then the quiet mornings slip by. Small steps, though. I did make coffee and sit with the project for a while.",
+      card: ["seed", "The Seed", "What have you started that you'd love to see bloom?"],
+      text: "Threw three bowls today. One of them is actually good. Small steps, but the shop feels a little more real.",
     },
     {
-      back: 5,
+      back: 10,
       mood: 4,
-      card: ["lightning-rod", "The Lightning Rod", "What gave you energy today?"],
-      text: "Good energy after lunch. Small steps worked: one commit, one tiny fix. I told myself the workout can wait until tomorrow.",
+      card: ["spark", "The Spark", "What gave you energy today?"],
+      text: "Listed my first piece! I refreshed the page way too many times. Quiet mornings in the studio are my favorite thing.",
+    },
+    {
+      back: 8,
+      mood: 3,
+      card: ["crossroads", "The Crossroads", "Where did you choose between two paths today?"],
+      text: "I wanted to run this morning, but I stayed in bed. I keep telling myself I'll run tomorrow.",
+    },
+    {
+      back: 6,
+      mood: 2,
+      card: ["whisper", "The Whisper", "What's been quietly on your mind?"],
+      text: "Tired today. I thought about my run and the shop all day and did neither. Sometimes I worry I say the right things and do the wrong ones.",
     },
     {
       back: 4,
       mood: 4,
-      card: ["hotfix", "The Hotfix", "What one small repair would make tomorrow easier?"],
-      text: "Finally did a workout. Short, but it counted. The quiet mornings feel better when I move first. Small steps again.",
+      card: ["mend", "The Mend", "What one small fix would make tomorrow lighter?"],
+      text: "Finally went for a run! Short, slow, and wonderful. Quiet mornings feel better when I move first.",
     },
     {
       back: 3,
-      mood: 2,
-      card: ["quiet-daemon", "The Quiet Daemon", "What runs in the background of your mind?"],
-      text: "Tired. I thought about the workout and the project all day and did neither properly. I worry I say the right things and do the wrong ones.",
+      mood: 4,
+      card: ["keepsake", "The Keepsake", "What are you saving for later?"],
+      text: "Studio day. Glazed six mugs. Small steps again, and I'm proud of them.",
     },
     {
       back: 2,
       mood: 5,
-      card: ["stash", "The Stash", "What are you holding aside for later?"],
-      text: "Called mom. Long and warm. Honestly this is the part of the week that matters most. Small steps toward being someone who shows up.",
+      card: ["sunrise", "The Sunrise", "If tomorrow could begin any way you like?"],
+      text: "Called mom. We talked for an hour and laughed so much. This is the part of the week that matters most.",
     },
     {
       back: 1,
       mood: 3,
-      card: ["rebase", "The Rebase", "If you could rewrite how today began?"],
-      text: "Planned a workout, skipped it. The quiet mornings are where I decide who I am. I want tomorrow to start differently.",
+      card: ["page", "The Blank Page", "If you could start fresh today?"],
+      text: "Planned a run, skipped it again. Quiet mornings are where I decide who I am. Tomorrow I want to start differently.",
     },
   ];
 
-  const entries: Entry[] = texts.map((t, i) => ({
+  const entries: Entry[] = pages.map((p, i) => ({
     id: `e_demo_${i}`,
-    date: day(t.back),
-    cardId: t.card[0],
-    cardTitle: t.card[1],
-    prompt: t.card[2],
-    text: t.text,
-    mood: t.mood,
-    createdAt: iso(t.back),
-    hash: shortHash(`${day(t.back)}|${t.text}`),
+    date: day(p.back),
+    cardId: p.card[0],
+    cardTitle: p.card[1],
+    prompt: p.card[2],
+    text: p.text,
+    mood: p.mood,
+    createdAt: iso(p.back),
+    hash: shortHash(`${day(p.back)}|${p.text}`),
   }));
 
   const events = [
-    { back: 5, title: "Deep work: side project" },
-    { back: 3, title: "Deep work: design" },
-    { back: 1, title: "Deep work: writing" },
-    { back: 2, title: "Team sync" },
-  ].map((e) => ({ date: day(e.back), title: e.title, minutes: 90 }));
+    { back: 3, title: "Studio time" },
+    { back: 5, title: "Studio time: glazing" },
+    { back: 9, title: "Studio time" },
+    { back: 2, title: "Call with mom" },
+  ].map((e) => ({ date: day(e.back), title: e.title, minutes: 120 }));
 
   return {
     goals,
@@ -176,11 +218,6 @@ export function createDemoState(today: ISODate): AppState {
     entries,
     checkins,
     letters: [],
-    evidence: {
-      githubUser: "demo-maya",
-      githubDays,
-      githubSyncedAt: iso(0),
-      events,
-    },
+    evidence: { githubUser: "", githubDays: {}, githubSyncedAt: null, events },
   };
 }

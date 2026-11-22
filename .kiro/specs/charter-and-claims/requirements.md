@@ -1,6 +1,9 @@
-# Requirements: Charter and Claims
+# Requirements: My Dreams and little steps
 
 ## Introduction
+
+In the UI this is the **My Dreams** tab. Code names are kept (goal, claim) but users see "dream"
+and "little step" (see `.kiro/steering/voice-and-tone.md`).
 
 The Charter is where a user states their goals in plain English. Each goal is turned into one or
 more _claims_: simple, checkable statements such as "3 workouts a week". Claims are what the rest
@@ -37,13 +40,14 @@ tell me whether I am on track.
 
 #### Acceptance criteria
 
-1. WHEN a goal is saved, THE app SHALL request a proposed claim from the LLM through a server
+1. WHEN a goal is saved, THE app SHALL let the user add an optional target date, place, and reason.
+2. WHEN a step is added, THE app SHALL request a proposed claim from the LLM through a server
    function and SHALL show it to the user as a suggestion.
-2. THE proposed claim SHALL include a metric, a numeric target, a period (day, week, or month),
+3. THE proposed claim SHALL include a metric, a numeric target, a period (day, week, or month),
    and an evidence source.
-3. IF the LLM request fails or returns an invalid claim, THEN THE app SHALL keep the goal, show a
+4. IF the LLM request fails or returns an invalid claim, THEN THE app SHALL keep the goal, show a
    friendly error, and let the user create the claim manually.
-4. THE server function SHALL validate the LLM output against the claim schema before returning it.
+5. THE server function SHALL validate the LLM output against the claim schema before returning it.
 
 ### Requirement 3: Edit and confirm claims
 
@@ -53,7 +57,9 @@ mean.
 #### Acceptance criteria
 
 1. THE app SHALL let the user change the metric, target, period, and evidence source of a claim.
-2. THE app SHALL only treat a claim as active after the user confirms it.
+2. THE app SHALL make a new step active right away and let the user edit it at any time.
+   (Changed from "only after the user confirms it": user testing showed the confirm step felt like
+   paperwork.)
 3. THE app SHALL let the user archive or delete a goal and its claims.
 
 ### Requirement 4: Claim integrity

@@ -1,8 +1,9 @@
 import { inRange } from "./dates.ts";
 import type { ClaimResult } from "./score.ts";
-import { periodLabel } from "./score.ts";
+import { windowPhrase } from "./score.ts";
 import type { Entry, Value } from "./types.ts";
 
+/** A gentle nudge where what the user writes and what they do don't line up. */
 export interface Conflict {
   id: string;
   claimId: string;
@@ -17,21 +18,20 @@ function fmt(n: number): string {
 }
 
 /**
- * Finds places where words and actions disagree. The result is sorted, so it does not depend on the
- * order of the inputs.
+ * Finds places where words and actions don't line up. The result is sorted, so it does not depend
+ * on the order of the inputs.
  */
 export function findConflicts(results: ClaimResult[], entries: Entry[]): Conflict[] {
   const out: Conflict[] = [];
 
   for (const r of results) {
     const { claim } = r;
-    const window = periodLabel(claim.period);
+    const when = windowPhrase(claim.period);
 
-    // The user's own count is higher than what the outside evidence shows. This is the stronger
-    // signal, so when it fires it replaces the softer "said vs. did" conflict for the same claim.
+    // The user's own count is higher than what the calendar or GitHub shows. This is the stronger
+    // signal, so when it fires it replaces the softer "you keep writing about it" nudge.
     const selfAhead = claim.source !== "checkin" && r.selfReported > r.actual;
 
-    // The user wrote about it, but the evidence says they are behind.
     if (!selfAhead && r.status === "behind" && claim.keyword) {
       const mentions = entries.filter(
         (e) =>
@@ -44,20 +44,21 @@ export function findConflicts(results: ClaimResult[], entries: Entry[]): Conflic
           claimId: claim.id,
           kind: "said_vs_did",
           value: r.value,
-          title: `Said vs. did: ${claim.metric}`,
-          detail: `You wrote about "${claim.keyword}" ${mentions} ${mentions === 1 ? "time" : "times"} in the ${window}. The evidence shows ${fmt(r.actual)} of ${fmt(r.target)}. What got in the way?`,
+          title: `You keep writing about "${claim.keyword}"`,
+          detail: `It came up ${mentions} ${mentions === 1 ? "time" : "times"} in your journal ${when}, and your tracker shows ${fmt(r.actual)} of ${fmt(r.target)}. It clearly matters to you. What tiny version could you try tomorrow?`,
         });
       }
     }
 
     if (selfAhead) {
+      const where = claim.source === "github" ? "GitHub" : "calendar";
       out.push({
         id: `${claim.id}:self_vs_evidence`,
         claimId: claim.id,
         kind: "self_vs_evidence",
         value: r.value,
-        title: `Self vs. evidence: ${claim.metric}`,
-        detail: `You reported ${fmt(r.selfReported)} in the ${window}, but ${claim.source === "github" ? "GitHub" : "your calendar"} shows ${fmt(r.actual)}. One of them is off. Which one do you trust?`,
+        title: `Your notes and your ${where} remember it differently`,
+        detail: `You ticked off ${fmt(r.selfReported)} for "${claim.metric}" ${when}, and your ${where} shows ${fmt(r.actual)}. Maybe a few never made it onto the ${where}? Either way, you're showing up.`,
       });
     }
   }

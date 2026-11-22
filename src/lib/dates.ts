@@ -55,6 +55,66 @@ export function formatLong(d: ISODate): string {
   });
 }
 
+export function formatMonthYear(d: ISODate): string {
+  return new Date(toUTC(d)).toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+}
+
+export function weekdayLetter(d: ISODate): string {
+  return new Date(toUTC(d))
+    .toLocaleDateString("en-US", { weekday: "narrow", timeZone: "UTC" })
+    .slice(0, 1);
+}
+
+export function dayOfMonth(d: ISODate): number {
+  return Number(d.slice(8, 10));
+}
+
+/** The last n days, oldest first, ending today. */
+export function lastNDays(today: ISODate, n: number): ISODate[] {
+  return Array.from({ length: n }, (_, i) => addDays(today, i - n + 1));
+}
+
+/** First day of the month containing d. */
+export function startOfMonth(d: ISODate): ISODate {
+  return `${d.slice(0, 7)}-01`;
+}
+
+/** Move by whole months, landing on the first of the month. */
+export function addMonths(d: ISODate, n: number): ISODate {
+  const y = Number(d.slice(0, 4));
+  const m = Number(d.slice(5, 7)) - 1 + n;
+  const date = new Date(Date.UTC(y, m, 1));
+  return `${pad(date.getUTCFullYear(), 4)}-${pad(date.getUTCMonth() + 1)}-01`;
+}
+
+/** 42 dates (6 weeks, Monday first) covering the month that contains d. */
+export function monthGrid(d: ISODate): ISODate[] {
+  const first = startOfMonth(d);
+  const weekday = new Date(toUTC(first)).getUTCDay(); // 0 = Sunday
+  const offset = (weekday + 6) % 7; // days since Monday
+  const start = addDays(first, -offset);
+  return Array.from({ length: 42 }, (_, i) => addDays(start, i));
+}
+
+/** Friendly distance from today, for example "in 3 months" or "2 days ago". */
+export function relativeDay(target: ISODate, today: ISODate): string {
+  const days = diffDays(today, target);
+  if (days === 0) return "today";
+  if (days === 1) return "tomorrow";
+  if (days === -1) return "yesterday";
+  const abs = Math.abs(days);
+  let label: string;
+  if (abs < 14) label = `${abs} days`;
+  else if (abs < 60) label = `${Math.round(abs / 7)} weeks`;
+  else if (abs < 730) label = `${Math.round(abs / 30.4)} months`;
+  else label = `${Math.round(abs / 365)} years`;
+  return days > 0 ? `in ${label}` : `${label} ago`;
+}
+
 export function formatShort(d: ISODate): string {
   return new Date(toUTC(d)).toLocaleDateString("en-US", {
     month: "short",

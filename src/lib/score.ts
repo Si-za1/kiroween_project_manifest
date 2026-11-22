@@ -22,10 +22,18 @@ export function rangeFor(period: Period, today: ISODate): Range {
   return { start: addDays(today, -29), end: today };
 }
 
+/** Short label for "per ___". */
 export function periodLabel(period: Period): string {
+  if (period === "day") return "a day";
+  if (period === "week") return "a week";
+  return "a month";
+}
+
+/** Phrase that fits after a sentence, for example "...3 times in the last 7 days". */
+export function windowPhrase(period: Period): string {
   if (period === "day") return "today";
-  if (period === "week") return "last 7 days";
-  return "last 30 days";
+  if (period === "week") return "in the last 7 days";
+  return "in the last 30 days";
 }
 
 export type Status = "met" | "close" | "behind" | "no_data";
@@ -35,7 +43,7 @@ export interface ClaimResult {
   value: Value;
   range: Range;
   actual: number;
-  /** Amount the user reported themselves through check-ins, regardless of source. */
+  /** Amount the user ticked off themselves, regardless of how the step is tracked. */
   selfReported: number;
   target: number;
   /** Fraction of the target reached, between 0 and 1. */
@@ -71,6 +79,11 @@ export function actualFor(claim: Claim, data: Data, range: Range): number {
     if (inRange(e.date, range.start, range.end) && matchesKeyword(e, claim.keyword)) count += 1;
   }
   return count;
+}
+
+/** Amount per day for each date, from the step's own tracking source. */
+export function dailyAmounts(claim: Claim, data: Data, dates: ISODate[]): number[] {
+  return dates.map((d) => actualFor(claim, data, { start: d, end: d }));
 }
 
 function hasAnyEvidence(claim: Claim, data: Data): boolean {
@@ -114,4 +127,11 @@ export function evaluateAll(
 ): ClaimResult[] {
   const valueByGoal = new Map(goals.map((g) => [g.id, g.value] as const));
   return claims.map((c) => evaluateClaim(c, data, today, valueByGoal.get(c.goalId) ?? "peace"));
+}
+
+/** Average progress of a dream's steps, or null when it has no steps yet. */
+export function dreamProgress(goalId: string, results: ClaimResult[]): number | null {
+  const mine = results.filter((r) => r.claim.goalId === goalId);
+  if (mine.length === 0) return null;
+  return mine.reduce((sum, r) => sum + r.score, 0) / mine.length;
 }
