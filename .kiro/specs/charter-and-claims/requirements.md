@@ -11,6 +11,8 @@ of the app (nightly checks, report card, Council letters) measures against.
 - **Charter**: the user's collection of goals and claims.
 - **Goal**: a plain-English statement of what the user wants.
 - **Claim**: a structured, checkable version of a goal, with a metric, a target, and a period.
+- **Window**: the rolling period a claim is measured over. Day is today, week is the last 7 days,
+  month is the last 30 days.
 - **Evidence source**: where data for a claim comes from (manual check-in, GitHub activity,
   calendar file).
 

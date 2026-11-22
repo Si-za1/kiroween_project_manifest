@@ -6,11 +6,12 @@
   specs/       One folder per feature: requirements.md, design.md, tasks.md
   hooks/       Agent hooks (JSON)
   agents/      Custom agents
-api/           Vercel Functions (server side, holds secrets)
+api/           Vercel Functions: claim, council, github. Shared code in api/_lib
 src/
-  components/  React UI components
-  lib/         Pure logic (no React, no browser APIs)
-  data/        IndexedDB storage and demo-mode seed data
+  components/  React UI components (one file per view)
+  lib/         Pure logic (no React, no browser APIs): claims, score, conflicts, cards,
+               voice, council, ics, dates, api client
+  data/        Storage, state actions, selectors, demo persona, useApp hook
   App.tsx
   main.tsx
 scripts/       Repo checks and helper scripts

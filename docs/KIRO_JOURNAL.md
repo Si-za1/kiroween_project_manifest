@@ -45,3 +45,15 @@ streak logic._
 ## Powers
 
 _Planned: GitHub CLI power for the repo workflow, Playwright for demo screenshots._
+
+## Build log
+
+- **Kiro Web, first full build.** The Kiro Web sandbox only allowed access to integrations, so the
+  npm registry returned 403 and dependencies could not be installed. The pure logic in `src/lib`
+  and the `api` handlers were still verified: strict TypeScript checks, plus Node 22 running the
+  TypeScript directly against the demo persona and a mocked LLM. The React UI was typechecked
+  against stub types only and still needs a real run.
+- **A bug found by running the logic.** Claim validation required a `value` field that stored claims
+  do not have, so every stored claim would have failed validation. A second run showed two
+  overlapping conflicts for one claim, so the stronger one now replaces the weaker one. Both are
+  good property-based test targets.

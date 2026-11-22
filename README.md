@@ -6,7 +6,26 @@ Manifest.git is a journaling and goal-reflection web app. You write your goals i
 the app turns them into checkable claims, compares them with real evidence, and lets future
 versions of you write back. It is a submission for the Kiro hackathon, **Frankenstein** category.
 
-**Status:** project scaffold. Features are being built spec by spec (see `.kiro/specs`).
+**Status:** first working version. Every feature below is in place and is being refined.
+
+## Try it
+
+1. Open the app and choose **Explore the demo**. It loads a sample person, Maya, with a week of
+   history, so every screen has something to show. No account and no API key needed.
+2. Or choose **Begin your Charter** and write your own goals.
+
+## Where things are
+
+| Screen      | What it does                                                                                                                 |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| **Today**   | A card is drawn from your own results. Write an entry, pick a mood, do a quick check-in.                                     |
+| **Charter** | Write goals in plain English. Each becomes an editable claim you confirm.                                                    |
+| **Report**  | Each claim is checked against evidence. Conflicts show where words and actions differ. Add GitHub or calendar evidence here. |
+| **Council** | Letters from you at 1, 5, and 20 years out. Write back to them.                                                              |
+| **Log**     | Every entry as a commit, newest first.                                                                                       |
+
+AI is optional. With no API key set, claims are drafted and letters are written by local logic, so
+the whole app still works.
 
 ## How it works
 
