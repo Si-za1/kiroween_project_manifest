@@ -1,3 +1,4 @@
+import { Logo } from "./Doodles.tsx";
 import { Icon } from "./Icons.tsx";
 import { VIEWS } from "./ui.tsx";
 import type { View } from "./ui.tsx";
@@ -32,10 +33,8 @@ export function Header({ view, onView, demo, persona, onExitDemo }: Props) {
             onView("home");
           }}
         >
-          <span className="brand-mark" aria-hidden="true">
-            <Icon name="spark" size={18} />
-          </span>
-          Manifest
+          <Logo size={36} />
+          <span className="brand-word">Dearly</span>
         </a>
         <nav className="tabs" aria-label="Main">
           {VIEWS.map((v) => (

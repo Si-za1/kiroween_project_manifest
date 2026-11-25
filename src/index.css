@@ -1,4 +1,4 @@
-/* Manifest design system v2: "quiet luxury".
+/* Dearly design system v3: "quiet luxury" plus a scrapbook layer (see the end of this file).
    Palette: greige #ece1db (ground), navy #214669 (ink), pink #f275a6 (accent).
    Type: Cormorant Garamond for display and letters, Manrope for everything else.
    Signature: fine dashed pink "stitch" seams, the Frankenstein touch. */
@@ -25,6 +25,7 @@
   --line: var(--navy-10);
 
   --font-display: "Cormorant Garamond", "Cormorant", "Iowan Old Style", Georgia, serif;
+  --font-hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;
   --font-body: "Manrope", "Avenir Next", "Segoe UI", system-ui, sans-serif;
 
   --radius: 20px;
@@ -2839,4 +2840,482 @@ button {
   .letter {
     padding: 1.3rem 1.2rem 1rem;
   }
+}
+
+/* =====================================================================================
+   Scrapbook layer: paper grain, washi tape, polaroids, stickers, and handwritten notes.
+   Everything here sits on top of the base system and only uses the three brand colors.
+   ===================================================================================== */
+
+/* Paper grain over the whole page. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .13 0 0 0 0 .27 0 0 0 0 .41 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+}
+
+/* Brand */
+.brand {
+  gap: 0.55rem;
+}
+
+.brand-word {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.95rem;
+  letter-spacing: 0;
+}
+
+/* Washi tape */
+.tape,
+.page-card::before,
+.insight::before,
+.tarot::before,
+.dream::before,
+.composer::before,
+.letter::before,
+.connect-card::before,
+.organ::before {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  top: -11px;
+  left: 50%;
+  width: 92px;
+  height: 24px;
+  transform: translateX(-50%) rotate(-3deg);
+  border-radius: 2px;
+  opacity: 0.88;
+  box-shadow: 0 1px 2px rgba(33, 70, 105, 0.12);
+  pointer-events: none;
+  /* Torn ends */
+  clip-path: polygon(3% 0, 97% 4%, 100% 50%, 96% 100%, 2% 96%, 0 48%);
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(242, 117, 166, 0.6) 0 6px,
+    rgba(249, 212, 227, 0.75) 6px 12px
+  );
+}
+
+.tape-dots,
+.page-card:nth-child(even)::before,
+.insight:nth-child(even)::before,
+.dream:nth-child(3n + 2)::before {
+  background:
+    radial-gradient(circle, rgba(33, 70, 105, 0.45) 1.6px, transparent 2px) 0 0 / 9px 9px,
+    rgba(249, 212, 227, 0.85);
+}
+
+.tape-check,
+.tarot::before,
+.composer::before,
+.dream:nth-child(3n)::before {
+  background:
+    linear-gradient(90deg, rgba(242, 117, 166, 0.38) 50%, transparent 50%) 0 0 / 12px 12px,
+    linear-gradient(0deg, rgba(242, 117, 166, 0.38) 50%, transparent 50%) 0 0 / 12px 12px,
+    rgba(253, 251, 249, 0.9);
+}
+
+.tape-navy,
+.letter::before,
+.organ::before {
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(33, 70, 105, 0.78) 0 8px,
+    rgba(45, 85, 121, 0.7) 8px 16px
+  );
+}
+
+.page-card:nth-child(3n)::before,
+.insight:nth-child(3n)::before {
+  left: 22%;
+  transform: translateX(-50%) rotate(4deg);
+}
+
+.dream:nth-child(even)::before {
+  left: 74%;
+  transform: translateX(-50%) rotate(5deg);
+}
+
+.page-card,
+.insight,
+.tarot,
+.dream,
+.composer,
+.letter,
+.connect-card,
+.organ,
+.tile {
+  position: relative;
+}
+
+/* Slightly crooked, like things pinned to a board. Straighten on hover. */
+.page-card,
+.insight,
+.dream,
+.tile {
+  transition:
+    transform 0.4s var(--ease),
+    box-shadow 0.4s var(--ease);
+}
+
+.page-card:nth-child(odd),
+.insight:nth-child(odd),
+.dream:nth-child(odd) {
+  transform: rotate(-0.7deg);
+}
+
+.page-card:nth-child(even),
+.insight:nth-child(even),
+.dream:nth-child(even) {
+  transform: rotate(0.6deg);
+}
+
+.page-card:hover,
+.insight:hover,
+.dream:hover {
+  transform: rotate(0) translateY(-3px);
+  box-shadow: var(--shadow-lift);
+}
+
+/* The dream card's tape needs to hang outside the card. */
+.dream {
+  overflow: visible;
+}
+
+.dream-top {
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+/* Stickers */
+.sticker {
+  overflow: visible;
+  filter: drop-shadow(0 3px 4px rgba(33, 70, 105, 0.2));
+}
+
+.sticker-outline * {
+  fill: #fff !important;
+  stroke: #fff !important;
+  stroke-width: 5.5 !important;
+}
+
+.hero-art {
+  position: relative;
+}
+
+.hero-art .sticker {
+  position: absolute;
+  z-index: 4;
+}
+
+.float-a {
+  animation: bob 6s ease-in-out infinite;
+}
+
+.float-b {
+  animation: bob 7.5s ease-in-out -2s infinite;
+}
+
+.float-c {
+  animation: bob 8s ease-in-out -4s infinite reverse;
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-6deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(6deg);
+  }
+}
+
+/* Polaroid */
+.polaroid {
+  position: relative;
+  margin: 0.5rem auto 0;
+  padding: 1rem 1rem 0;
+  max-width: 30rem;
+  background: var(--paper-pure);
+  border-radius: 6px;
+  box-shadow:
+    0 2px 3px rgba(33, 70, 105, 0.08),
+    0 26px 48px -22px rgba(33, 70, 105, 0.45);
+  transform: rotate(2deg);
+  transition: transform 0.5s var(--ease);
+}
+
+.polaroid:hover {
+  transform: rotate(0.5deg) scale(1.01);
+}
+
+.polaroid-photo {
+  border-radius: 3px;
+  background:
+    radial-gradient(circle at 70% 20%, rgba(242, 117, 166, 0.18), transparent 60%),
+    linear-gradient(180deg, #f5ebe6, #efe2dc);
+  overflow: hidden;
+}
+
+.polaroid .illustration {
+  animation: none;
+  margin-top: 0.5rem;
+}
+
+.polaroid figcaption {
+  padding: 0.85rem 0 1.05rem;
+  text-align: center;
+  font-family: var(--font-hand);
+  font-size: 1.7rem;
+  line-height: 1;
+  color: var(--navy);
+}
+
+.tape-top {
+  top: -12px;
+}
+
+/* Hero copy */
+.hero-dear {
+  font-family: var(--font-hand);
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--pink-deep);
+  margin: 0 0 0.25rem;
+  transform: rotate(-3deg);
+  transform-origin: left center;
+}
+
+.psst {
+  display: inline-block;
+  margin: 1.3rem 0 0;
+  padding: 0.35rem 0.9rem 0.45rem;
+  border-radius: 4px;
+  background: var(--pink-soft);
+  transform: rotate(-1.5deg);
+  box-shadow: 0 6px 14px -8px rgba(33, 70, 105, 0.35);
+  font-family: var(--font-hand);
+  font-size: 1.45rem;
+  color: var(--navy);
+}
+
+.psst .squiggle {
+  flex-shrink: 0;
+  transform: scaleY(-1) rotate(-8deg);
+  opacity: 0.8;
+}
+
+/* Feature tiles as sticky notes */
+.tile {
+  background: var(--tint);
+  border: 0;
+  border-radius: 6px 6px 22px 6px;
+  box-shadow:
+    0 1px 2px rgba(33, 70, 105, 0.08),
+    0 18px 30px -18px rgba(33, 70, 105, 0.4);
+}
+
+.tile:nth-child(1) {
+  transform: rotate(-1.6deg);
+}
+.tile:nth-child(2) {
+  transform: rotate(1.2deg);
+}
+.tile:nth-child(3) {
+  transform: rotate(-0.8deg);
+}
+.tile:nth-child(4) {
+  transform: rotate(1.8deg);
+}
+
+.tile:hover {
+  transform: rotate(0) translateY(-6px);
+  border-color: transparent;
+}
+
+.tile-icon {
+  background: rgba(253, 251, 249, 0.85);
+}
+
+.tile-sticker {
+  transform: rotate(10deg);
+  transition: transform 0.4s var(--ease);
+}
+
+.tile:hover .tile-sticker {
+  transform: rotate(-8deg) scale(1.15);
+}
+
+.tile-go {
+  color: var(--tint-ink);
+}
+
+/* Gingham behind the stitch strip */
+.stitch-strip {
+  background:
+    linear-gradient(90deg, rgba(242, 117, 166, 0.07) 50%, transparent 50%) 0 0 / 28px 28px,
+    linear-gradient(0deg, rgba(242, 117, 166, 0.07) 50%, transparent 50%) 0 0 / 28px 28px,
+    var(--navy);
+}
+
+.stitch-title em {
+  font-style: italic;
+  color: var(--pink);
+}
+
+/* Notebook page: margin line and binder holes */
+.diary,
+.composer {
+  background-image:
+    linear-gradient(
+      90deg,
+      transparent 2.6rem,
+      rgba(242, 117, 166, 0.45) 2.6rem,
+      rgba(242, 117, 166, 0.45) calc(2.6rem + 1.5px),
+      transparent calc(2.6rem + 1.5px)
+    ),
+    radial-gradient(circle at 1.1rem 50%, var(--ground) 0.32rem, transparent 0.36rem);
+  background-size:
+    100% 100%,
+    100% 3.2rem;
+  background-repeat: no-repeat, repeat-y;
+  padding-left: 3.6rem;
+}
+
+.diary-hello,
+.composer-hello {
+  font-family: var(--font-hand);
+  font-style: normal;
+  font-size: 2.3rem;
+  line-height: 1;
+  color: var(--pink-deep);
+}
+
+.sky-line {
+  font-size: 0.78rem;
+}
+
+/* Handwriting for little human touches */
+.nudge-title,
+.envelope-name,
+.upcoming-date,
+.tl-month,
+.page-date {
+  font-family: var(--font-hand);
+  font-style: normal;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.nudge-title {
+  font-size: 1.6rem;
+}
+
+.envelope-name {
+  font-size: 1.7rem;
+}
+
+.page-date {
+  font-size: 1.55rem;
+  font-weight: 600;
+}
+
+.tl-month {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--pink-deep);
+}
+
+.upcoming-date {
+  font-size: 1.45rem;
+}
+
+/* Kickers get a small heart */
+.kicker::before {
+  content: "♡ ";
+  letter-spacing: 0;
+}
+
+.stitch-strip .kicker::before,
+.demo-bar .kicker::before {
+  content: "";
+}
+
+/* Stats as round stickers */
+.stat-icon {
+  border: 2px solid #fff;
+  box-shadow: 0 3px 6px rgba(33, 70, 105, 0.15);
+  transform: rotate(-8deg);
+}
+
+/* Habit dots become little hearts when done */
+.habit-dot.is-on {
+  border-radius: 0;
+  background: var(--tint-ink);
+  box-shadow: none;
+  clip-path: path(
+    "M10 18s-8-4.8-8-10.2A4.4 4.4 0 0 1 10 5.4a4.4 4.4 0 0 1 8 2.4C18 13.2 10 18 10 18z"
+  );
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Insights read like notes pinned up */
+.insight {
+  background: var(--paper-pure);
+}
+
+.insight-title {
+  font-size: 1.6rem;
+}
+
+/* Letters in the modal: leave room for the tape */
+.reveal-letter {
+  padding-top: 14px;
+}
+
+/* Small screens: keep things straight so nothing overflows */
+@media (max-width: 44rem) {
+  .page-card,
+  .insight,
+  .dream,
+  .tile,
+  .polaroid {
+    transform: none !important;
+  }
+  .hero-art .sticker {
+    display: none;
+  }
+  .diary,
+  .composer {
+    padding-left: 2.9rem;
+    background-size:
+      100% 100%,
+      100% 3rem;
+    background-image:
+      linear-gradient(
+        90deg,
+        transparent 2.1rem,
+        rgba(242, 117, 166, 0.45) 2.1rem,
+        rgba(242, 117, 166, 0.45) calc(2.1rem + 1.5px),
+        transparent calc(2.1rem + 1.5px)
+      ),
+      radial-gradient(circle at 0.9rem 50%, var(--ground) 0.28rem, transparent 0.32rem);
+  }
+}
+
+.hero-title {
+  font-size: clamp(2.6rem, 5.6vw, 4.4rem);
+  line-height: 1;
 }

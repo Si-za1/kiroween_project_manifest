@@ -24,7 +24,7 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
   }, []);
 
   return (
-    <div className="video-modal" role="dialog" aria-modal="true" aria-label="Manifest demo video">
+    <div className="video-modal" role="dialog" aria-modal="true" aria-label="Dearly demo video">
       <button
         type="button"
         className="reveal-backdrop"
@@ -45,7 +45,7 @@ export function VideoModal({ onClose }: { onClose: () => void }) {
         {source.kind === "embed" ? (
           <iframe
             src={source.src}
-            title="Manifest demo video"
+            title="Dearly demo video"
             allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
             allowFullScreen
           />

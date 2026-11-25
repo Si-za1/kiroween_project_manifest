@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { addEntry, setCheckIn } from "../data/actions.ts";
 import type { Model } from "../data/selectors.ts";
 import type { AppApi } from "../data/useApp.ts";
-import { formatLong } from "../lib/dates.ts";
+import { formatLong, formatWeekdayShort } from "../lib/dates.ts";
 import { moonFor, moonRitual } from "../lib/moon.ts";
 import { windowPhrase } from "../lib/score.ts";
 import { appendDictation, canListen, listen } from "../lib/speech.ts";
@@ -256,7 +256,7 @@ export function JournalView({ app, model, today, goTo }: Props) {
             {pages.map((e) => (
               <li key={e.id} className="page-card paper">
                 <div className="page-meta">
-                  <span className="page-date">{formatLong(e.date)}</span>
+                  <span className="page-date">{formatWeekdayShort(e.date)}</span>
                   <span className="page-sky">
                     {weather[e.date] ? (
                       <span title={WEATHER_LABEL[weatherKind(weather[e.date]?.code ?? 0)]}>

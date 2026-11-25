@@ -73,7 +73,7 @@ export async function fetchGithubDays(user: string): Promise<GithubResult> {
   return {
     ok: false,
     message:
-      "GitHub needs the Manifest server, which this version doesn't have. It works on the Vercel deployment.",
+      "GitHub needs the Dearly server, which this version doesn't have. It works on the Vercel deployment.",
   };
 }
 

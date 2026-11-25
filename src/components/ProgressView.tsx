@@ -233,7 +233,7 @@ function Insights({
           <p className="insight-sources">Journal × Weather</p>
           <h3 className="insight-title">Does the sky change your mood?</h3>
           <p className="small muted">
-            Add your city and Manifest will look for patterns in your pages.
+            Add your city and Dearly will look for patterns in your pages.
           </p>
           <button type="button" className="link small" onClick={() => goTo("connections")}>
             Connect the weather <Icon name="chevron-right" size={14} />

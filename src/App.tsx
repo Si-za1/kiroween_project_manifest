@@ -44,7 +44,7 @@ export default function App() {
         {view === "connections" && <ConnectionsView app={app} model={model} />}
       </main>
       <footer className="footer">
-        <span>Manifest · stitched together with care. Your journal stays on this device.</span>
+        <span>Dearly · stitched together with love. Your journal stays on this device.</span>
         <span className="footer-links">
           {app.demo ? (
             <button type="button" className="link" onClick={() => app.setDemo(true)}>

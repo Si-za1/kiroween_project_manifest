@@ -27,7 +27,7 @@
 - Every AI feature has a deterministic local fallback in `src/lib` (claim drafting, Council letters).
 - Styling: one stylesheet, `src/index.css`, with CSS variables. Brand palette: greige `#ece1db`
   (ground), navy `#214669` (ink and primary), pink `#f275a6` (accent and stitches). Fonts: Cormorant
-  Garamond (display, letters, italics) and Manrope (body and UI). Card colors come from `.tint-*`
+  Garamond (display, letters, italics), Manrope (body and UI), and Caveat (handwritten accents). Card colors come from `.tint-*`
   classes (blush, navy, sand, mauve, powder, rose), all derived from the brand colors.
 - Free browser APIs with no key (Open-Meteo, Web Speech) are called from `src/lib`. Anything that
   needs a secret goes through `/api`. Every integration must work offline or fail gracefully.

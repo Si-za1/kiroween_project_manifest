@@ -1,8 +1,8 @@
 {
-  "name": "manifest-git",
+  "name": "dearly",
   "version": "0.1.0",
   "private": true,
-  "description": "Manifestation with receipts. Goals become testable claims, your data checks them, and future versions of you write back.",
+  "description": "Dearly: a sweet dream journal that writes back. Dreams become little steps, the sky and moon join your mood, and future you sends letters.",
   "license": "MIT",
   "type": "module",
   "engines": {
