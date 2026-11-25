@@ -3,6 +3,8 @@
 > Write it down. Watch it grow.
 
 **Live app:** https://www.sizaadhikari.com.np/kiroween_project_manifest/
+**Demo video:** [public/media/manifest-demo.mp4](public/media/manifest-demo.mp4) (86 seconds), also
+behind **Watch the demo** on the app's Home page
 **Category:** Kiro hackathon, Frankenstein
 **License:** [MIT](LICENSE)
 
@@ -89,6 +91,12 @@ npx vercel dev
 | `npm test`           | Run tests once                               |
 | `npm run build`      | Typecheck and production build               |
 | `npm run check:kiro` | Verify `.kiro` is present and not gitignored |
+
+## Changing the demo video
+
+**Watch the demo** on the Home page plays `public/media/manifest-demo.mp4` by default. To use a
+YouTube or Vimeo link instead, set `VITE_DEMO_VIDEO_URL` at build time (for example in Vercel's
+environment variables), or edit the fallback in [`src/config.ts`](src/config.ts).
 
 ## Deploying
 

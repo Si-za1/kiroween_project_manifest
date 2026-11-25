@@ -2369,6 +2369,75 @@ button {
   background: var(--paper);
 }
 
+/* ---------- Demo video ---------- */
+
+.btn-watch {
+  color: var(--navy);
+  padding-left: 0.6rem;
+}
+
+.play-dot {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  background: var(--pink);
+  color: #fff;
+  box-shadow: 0 0 0 5px var(--pink-whisper);
+  transition: transform 0.3s var(--ease);
+}
+
+.play-dot .icon {
+  fill: currentColor;
+  margin-left: 2px;
+}
+
+.btn-watch:hover .play-dot {
+  transform: scale(1.08);
+}
+
+.video-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.video-frame {
+  position: relative;
+  width: min(72rem, 100%);
+  aspect-ratio: 16 / 10;
+  max-height: calc(100vh - 3rem);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #0f2135;
+  box-shadow: 0 40px 80px -30px rgba(10, 25, 40, 0.7);
+  animation: video-in 0.5s var(--ease) both;
+}
+
+@keyframes video-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+}
+
+.video-frame video,
+.video-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #0f2135;
+}
+
+.video-frame .video-close {
+  animation: none;
+}
+
 /* ---------- Opening a letter: envelope flies in, flap opens, sheet rises, letter unfolds ---------- */
 
 .reveal {

@@ -29,7 +29,8 @@ export type UiIcon =
   | "link"
   | "download"
   | "sparkles"
-  | "lock";
+  | "lock"
+  | "play";
 
 const PATHS: Record<UiIcon, string[]> = {
   seed: [
@@ -135,6 +136,7 @@ const PATHS: Record<UiIcon, string[]> = {
     "M10 3l1.6 4.4L16 9l-4.4 1.6L10 15l-1.6-4.4L4 9l4.4-1.6z",
     "M18 14l.8 2.2L21 17l-2.2.8L18 20l-.8-2.2L15 17l2.2-.8z",
   ],
+  play: ["M8 5.5v13l11-6.5z"],
   lock: ["M6 11h12v9H6z", "M8 11V8a4 4 0 0 1 8 0v3"],
   smile: [
     "M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18z",
