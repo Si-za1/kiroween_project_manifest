@@ -81,3 +81,69 @@ export function parseICS(text: string): CalendarEvent[] {
   }
   return events;
 }
+
+function escapeText(s: string): string {
+  return s
+    .replace(/\\/g, "\\\\")
+    .replace(/([,;])/g, "\\$1")
+    .replace(/\r?\n/g, "\\n");
+}
+
+/** Folds long lines to 75 octets, as the iCalendar format requires. */
+function fold(line: string): string {
+  const out: string[] = [];
+  let rest = line;
+  while (rest.length > 74) {
+    out.push(rest.slice(0, 74));
+    rest = ` ${rest.slice(74)}`;
+  }
+  out.push(rest);
+  return out.join("\r\n");
+}
+
+export interface ExportEvent {
+  uid: string;
+  date: string; // YYYY-MM-DD
+  title: string;
+  description: string;
+}
+
+/**
+ * Builds an .ics file of all-day events, each with a reminder one week before. Imports into
+ * Google Calendar, Apple Calendar, and Outlook.
+ */
+export function buildICS(events: ExportEvent[], stamp: Date = new Date()): string {
+  const dtstamp = stamp
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace(/\.\d{3}/, "");
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Manifest//Dream journal//EN",
+    "CALSCALE:GREGORIAN",
+  ];
+  for (const e of events) {
+    const start = e.date.replace(/-/g, "");
+    const next = new Date(`${e.date}T00:00:00Z`);
+    next.setUTCDate(next.getUTCDate() + 1);
+    const end = next.toISOString().slice(0, 10).replace(/-/g, "");
+    lines.push(
+      "BEGIN:VEVENT",
+      `UID:${e.uid}@manifest`,
+      `DTSTAMP:${dtstamp}`,
+      `DTSTART;VALUE=DATE:${start}`,
+      `DTEND;VALUE=DATE:${end}`,
+      fold(`SUMMARY:${escapeText(e.title)}`),
+      fold(`DESCRIPTION:${escapeText(e.description)}`),
+      "BEGIN:VALARM",
+      "ACTION:DISPLAY",
+      "TRIGGER:-P7D",
+      fold(`DESCRIPTION:${escapeText(`One week to go: ${e.title}`)}`),
+      "END:VALARM",
+      "END:VEVENT",
+    );
+  }
+  lines.push("END:VCALENDAR");
+  return `${lines.join("\r\n")}\r\n`;
+}

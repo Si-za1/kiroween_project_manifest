@@ -74,3 +74,9 @@ export async function fetchGithubDays(user: string): Promise<GithubResult> {
     message: "Could not reach GitHub. This needs the deployed app or `vercel dev`.",
   };
 }
+
+/** Whether the server has an AI service set up. Returns null when the API can't be reached. */
+export async function aiStatus(): Promise<boolean | null> {
+  const res = await call<{ ai?: unknown }>("/api/status");
+  return res.ok ? res.data.ai === true : null;
+}

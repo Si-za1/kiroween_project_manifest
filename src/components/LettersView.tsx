@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { addLetters, setReply } from "../data/actions.ts";
 import type { Model } from "../data/selectors.ts";
 import type { AppApi } from "../data/useApp.ts";
 import { writeLetters } from "../lib/api.ts";
 import { buildContext, fallbackLetters, selfById, SELVES } from "../lib/council.ts";
 import { formatLong } from "../lib/dates.ts";
+import { canSpeak, speak } from "../lib/speech.ts";
 import type { Letter } from "../lib/types.ts";
 import { Icon } from "./Icons.tsx";
 import { AREA, Paragraphs } from "./ui.tsx";
@@ -13,6 +14,22 @@ function LetterPaper({ letter, onReply }: { letter: Letter; onReply: (text: stri
   const self = selfById(letter.selfId);
   const area = AREA[self.value];
   const [reply, setReplyText] = useState(letter.reply);
+  const [reading, setReading] = useState(false);
+  const stopRef = useRef<(() => void) | null>(null);
+  useEffect(() => () => stopRef.current?.(), []);
+
+  function toggleRead() {
+    if (reading) {
+      stopRef.current?.();
+      return;
+    }
+    setReading(true);
+    stopRef.current = speak(letter.text, () => {
+      setReading(false);
+      stopRef.current = null;
+    });
+  }
+
   return (
     <li className={`letter paper tint-${area.tint}`}>
       <header className="letter-head">
@@ -23,6 +40,17 @@ function LetterPaper({ letter, onReply }: { letter: Letter; onReply: (text: stri
           <p className="letter-from">From {self.name.toLowerCase()}</p>
           <p className="muted small">Looks after {self.caresAbout}</p>
         </div>
+        {canSpeak() ? (
+          <button
+            type="button"
+            className={`listen${reading ? " is-on" : ""}`}
+            aria-pressed={reading}
+            onClick={toggleRead}
+          >
+            <Icon name={reading ? "stop" : "speaker"} size={15} />
+            {reading ? "Stop" : "Listen"}
+          </button>
+        ) : null}
       </header>
       <div className="letter-body hand">
         <Paragraphs text={letter.text} />
@@ -67,6 +95,8 @@ export function LettersView({ app, model, today }: { app: AppApi; model: Model; 
       model.conflicts,
       app.state.entries,
       model.voice,
+      model.patterns,
+      model.moon,
     );
     const ai = await writeLetters(ctx);
     app.update((s) => addLetters(s, ai ?? fallbackLetters(ctx), ai ? "ai" : "local", new Date()));

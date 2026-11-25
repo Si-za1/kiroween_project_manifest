@@ -25,8 +25,14 @@
   (`{ "error": "message" }`) and an appropriate status code.
 - Prompts sent to the LLM live in `api/_lib/prompts.ts` so they can be reviewed.
 - Every AI feature has a deterministic local fallback in `src/lib` (claim drafting, Council letters).
-- Styling: one stylesheet, `src/index.css`, with CSS variables. Colors come from `.tint-*` classes
-  (peach, sage, butter, lavender, sky, rose). Illustrations and icons are inline SVG, no image files.
+- Styling: one stylesheet, `src/index.css`, with CSS variables. Brand palette: greige `#ece1db`
+  (ground), navy `#214669` (ink and primary), pink `#f275a6` (accent and stitches). Fonts: Cormorant
+  Garamond (display, letters, italics) and Manrope (body and UI). Card colors come from `.tint-*`
+  classes (blush, navy, sand, mauve, powder, rose), all derived from the brand colors.
+- Free browser APIs with no key (Open-Meteo, Web Speech) are called from `src/lib`. Anything that
+  needs a secret goes through `/api`. Every integration must work offline or fail gracefully.
+- Patterns (`src/lib/patterns.ts`) need at least 2 days per group and a 0.5 mood-point gap before
+  they say anything, so small samples never produce confident claims. Illustrations and icons are inline SVG, no image files.
 - Evidence windows are rolling: day = today, week = last 7 days, month = last 30 days.
 - Never log journal text or API keys.
 

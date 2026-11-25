@@ -1,6 +1,7 @@
 import type { Conflict } from "./conflicts.ts";
 import { hashString } from "./ids.ts";
 import type { ClaimResult } from "./score.ts";
+import type { Moon } from "./moon.ts";
 import type { ISODate, Tint } from "./types.ts";
 
 export type IconName =
@@ -14,7 +15,9 @@ export type IconName =
   | "spark"
   | "mirror"
   | "step"
-  | "sun";
+  | "sun"
+  | "moon"
+  | "full-moon";
 
 export interface Card {
   id: string;
@@ -30,7 +33,7 @@ const BASE: Omit<Card, "numeral">[] = [
     id: "seed",
     title: "The Seed",
     icon: "seed",
-    tint: "sage",
+    tint: "navy",
     prompt: "What have you started that you'd love to see bloom?",
   },
   {
@@ -44,65 +47,111 @@ const BASE: Omit<Card, "numeral">[] = [
     id: "crossroads",
     title: "The Crossroads",
     icon: "crossroads",
-    tint: "sky",
+    tint: "powder",
     prompt: "Where did you choose between two paths today? What made you pick yours?",
   },
   {
     id: "sunrise",
     title: "The Sunrise",
     icon: "sunrise",
-    tint: "butter",
+    tint: "sand",
     prompt: "If tomorrow could begin any way you like, what would the first hour look like?",
   },
   {
     id: "mend",
     title: "The Mend",
     icon: "mend",
-    tint: "peach",
+    tint: "blush",
     prompt: "What one small fix would make tomorrow feel lighter?",
   },
   {
     id: "page",
     title: "The Blank Page",
     icon: "page",
-    tint: "lavender",
+    tint: "mauve",
     prompt: "If you could start fresh today, what's the first thing you would keep?",
   },
   {
     id: "whisper",
     title: "The Whisper",
     icon: "whisper",
-    tint: "lavender",
+    tint: "mauve",
     prompt: "What's been quietly on your mind that you haven't said out loud yet?",
   },
   {
     id: "spark",
     title: "The Spark",
     icon: "spark",
-    tint: "butter",
+    tint: "sand",
     prompt: "What gave you energy today, and what took it away?",
   },
 ];
 
-const ROMAN = ["0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+const ROMAN = [
+  "0",
+  "I",
+  "II",
+  "III",
+  "IV",
+  "V",
+  "VI",
+  "VII",
+  "VIII",
+  "IX",
+  "X",
+  "XI",
+  "XII",
+  "XIII",
+  "XIV",
+  "XV",
+  "XVI",
+  "XVII",
+  "XVIII",
+  "XIX",
+  "XX",
+];
 
 function numeral(n: number): string {
   return ROMAN[n] ?? String(n);
 }
 
-export const DECK_SIZE = BASE.length + 3;
+export const DECK_SIZE = BASE.length + 5;
 
 interface DrawInput {
   date: ISODate;
   results: ClaimResult[];
   conflicts: Conflict[];
+  moon?: Moon;
 }
 
 /**
  * Daily draw. The same date and the same state always give the same card, so the card does not
  * change on reload. Special cards come from the user's own progress.
  */
-export function drawCard({ date, results, conflicts }: DrawInput): Card {
+export function drawCard({ date, results, conflicts, moon }: DrawInput): Card {
+  // New and full moons are manifestation rituals, so they take the day's card.
+  if (moon?.phase === "new") {
+    return {
+      id: "new-moon",
+      numeral: numeral(BASE.length + 4),
+      title: "The New Moon",
+      icon: "moon",
+      tint: "mauve",
+      prompt: "Set an intention. Write one dream as if it has already come true. How does it feel?",
+    };
+  }
+  if (moon?.phase === "full") {
+    return {
+      id: "full-moon",
+      numeral: numeral(BASE.length + 5),
+      title: "The Full Moon",
+      icon: "full-moon",
+      tint: "sand",
+      prompt:
+        "Celebrate and let go. Name one thing you're proud of and one thing you're ready to release.",
+    };
+  }
+
   const firstConflict = conflicts[0];
   if (firstConflict) {
     return {
@@ -110,7 +159,7 @@ export function drawCard({ date, results, conflicts }: DrawInput): Card {
       numeral: numeral(BASE.length + 1),
       title: "The Mirror",
       icon: "mirror",
-      tint: "sky",
+      tint: "powder",
       prompt: `${firstConflict.title}. What would you tell a friend who said the same thing?`,
     };
   }
@@ -125,7 +174,7 @@ export function drawCard({ date, results, conflicts }: DrawInput): Card {
       numeral: numeral(BASE.length + 2),
       title: "The Tiny Step",
       icon: "step",
-      tint: "peach",
+      tint: "blush",
       prompt: `What's the smallest, easiest version of "${worst.claim.metric}" you could do today?`,
     };
   }
@@ -136,7 +185,7 @@ export function drawCard({ date, results, conflicts }: DrawInput): Card {
       numeral: numeral(BASE.length + 3),
       title: "The Sun",
       icon: "sun",
-      tint: "butter",
+      tint: "sand",
       prompt: "Every step is on track. What helped, and how can you keep it going?",
     };
   }

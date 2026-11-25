@@ -8,7 +8,7 @@ export type Source = (typeof SOURCES)[number];
 export const VALUES = ["ambition", "connection", "peace"] as const;
 export type Value = (typeof VALUES)[number];
 
-export const TINTS = ["peach", "sage", "butter", "lavender", "sky", "rose"] as const;
+export const TINTS = ["blush", "navy", "sand", "mauve", "powder", "rose"] as const;
 export type Tint = (typeof TINTS)[number];
 
 /** Calendar date as YYYY-MM-DD in the user's local time. */
@@ -66,11 +66,27 @@ export interface CalendarEvent {
   minutes: number;
 }
 
+export interface WeatherPlace {
+  name: string;
+  region: string;
+  latitude: number;
+  longitude: number;
+}
+
+/** One day of weather. `code` is a WMO weather code, as returned by Open-Meteo. */
+export interface WeatherDay {
+  code: number;
+  tempC: number | null;
+}
+
 export interface EvidenceData {
   githubUser: string;
   githubDays: Record<ISODate, number>;
   githubSyncedAt: string | null;
   events: CalendarEvent[];
+  weatherPlace: WeatherPlace | null;
+  weatherDays: Record<ISODate, WeatherDay>;
+  weatherSyncedAt: string | null;
 }
 
 export type SelfId = "builder" | "keeper" | "elder";

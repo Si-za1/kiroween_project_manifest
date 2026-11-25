@@ -12,6 +12,8 @@ import type {
   ISODate,
   Letter,
   SelfId,
+  WeatherDay,
+  WeatherPlace,
 } from "../lib/types.ts";
 
 export type DreamInput = Pick<Goal, "text" | "why" | "where" | "byDate" | "tint" | "value">;
@@ -42,7 +44,7 @@ export function addDream(
     why: input.why.trim().slice(0, 1000),
     where: input.where.trim().slice(0, 120),
     byDate: input.byDate,
-    tint: (TINTS as readonly string[]).includes(input.tint) ? input.tint : "peach",
+    tint: (TINTS as readonly string[]).includes(input.tint) ? input.tint : "blush",
     value: isValue(input.value) ? input.value : "peace",
     createdAt: now.toISOString(),
     archived: false,
@@ -151,6 +153,36 @@ export function setGithub(
       githubSyncedAt: now.toISOString(),
     },
   };
+}
+
+export function setWeather(
+  state: AppState,
+  place: WeatherPlace,
+  days: Record<ISODate, WeatherDay>,
+  now: Date,
+): AppState {
+  return {
+    ...state,
+    evidence: {
+      ...state.evidence,
+      weatherPlace: place,
+      // Keep older days the API no longer returns, so patterns keep their history.
+      weatherDays: { ...state.evidence.weatherDays, ...days },
+      weatherSyncedAt: now.toISOString(),
+    },
+  };
+}
+
+export function disconnect(state: AppState, what: "weather" | "calendar" | "github"): AppState {
+  const e = state.evidence;
+  if (what === "weather") {
+    return {
+      ...state,
+      evidence: { ...e, weatherPlace: null, weatherDays: {}, weatherSyncedAt: null },
+    };
+  }
+  if (what === "calendar") return { ...state, evidence: { ...e, events: [] } };
+  return { ...state, evidence: { ...e, githubUser: "", githubDays: {}, githubSyncedAt: null } };
 }
 
 export function setEvents(state: AppState, events: CalendarEvent[]): AppState {

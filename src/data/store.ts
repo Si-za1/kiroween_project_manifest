@@ -2,7 +2,7 @@ import type { AppState, Goal } from "../lib/types.ts";
 import { createDemoState } from "./demo.ts";
 
 const KEY_REAL = "manifest.v1";
-const KEY_DEMO = "manifest.demo.v2";
+const KEY_DEMO = "manifest.demo.v3";
 const KEY_MODE = "manifest.mode";
 
 export function emptyState(): AppState {
@@ -11,7 +11,15 @@ export function emptyState(): AppState {
     claims: [],
     entries: [],
     checkins: [],
-    evidence: { githubUser: "", githubDays: {}, githubSyncedAt: null, events: [] },
+    evidence: {
+      githubUser: "",
+      githubDays: {},
+      githubSyncedAt: null,
+      events: [],
+      weatherPlace: null,
+      weatherDays: {},
+      weatherSyncedAt: null,
+    },
     letters: [],
   };
 }
@@ -24,6 +32,15 @@ function storage(): Storage | null {
   }
 }
 
+// Colors were renamed when the palette changed. Map old saved names to the new ones.
+const OLD_TINTS: Record<string, string> = {
+  peach: "blush",
+  sage: "navy",
+  butter: "sand",
+  lavender: "mauve",
+  sky: "powder",
+};
+
 function normalize(raw: unknown): AppState | null {
   if (typeof raw !== "object" || raw === null) return null;
   const o = raw as Partial<AppState>;
@@ -32,7 +49,14 @@ function normalize(raw: unknown): AppState | null {
     // Older saves have no why, where, byDate, or tint on goals. Fill them in.
     goals: Array.isArray(o.goals)
       ? o.goals.map(
-          (g: Partial<Goal>) => ({ why: "", where: "", byDate: "", tint: "peach", ...g }) as Goal,
+          (g: Partial<Goal>) =>
+            ({
+              why: "",
+              where: "",
+              byDate: "",
+              ...g,
+              tint: OLD_TINTS[g.tint ?? ""] ?? g.tint ?? "blush",
+            }) as Goal,
         )
       : base.goals,
     claims: Array.isArray(o.claims) ? o.claims : base.claims,

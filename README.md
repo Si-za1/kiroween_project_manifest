@@ -3,8 +3,17 @@
 > Write it down. Watch it grow.
 
 Manifest is a cozy journal that turns your dreams into little daily steps, shows how far you've
-come, and lets future versions of you write back. It stitches together a journal, a dream planner,
-a habit tracker, tarot-style prompt cards, and letters from your future self. It is a submission for the Kiro hackathon, **Frankenstein** category.
+come, and lets future versions of you write back. It is stitched together from seven pieces:
+
+| Piece    | Powered by                                          | What the stitch makes                                  |
+| -------- | --------------------------------------------------- | ------------------------------------------------------ |
+| Journal  | Your device                                         | Pages, moods, dreams, and little steps                 |
+| Weather  | [Open-Meteo](https://open-meteo.com) (free, no key) | "You glow on sunny days" style mood patterns           |
+| Moon     | Astronomy maths on your device                      | New and full moon ritual cards, moon and mood patterns |
+| Calendar | `.ics` import and export                            | Steps that count themselves, dream dates as reminders  |
+| GitHub   | GitHub REST API                                     | Coding steps that count themselves                     |
+| AI       | Any OpenAI-compatible model                         | Steps from plain goals, letters from Future Me         |
+| Voice    | Web Speech API in the browser                       | Speak your pages, hear your letters                    | It is a submission for the Kiro hackathon, **Frankenstein** category. |
 
 **Status:** first working version. Every feature below is in place and is being refined.
 
@@ -16,13 +25,14 @@ a habit tracker, tarot-style prompt cards, and letters from your future self. It
 
 ## Screens
 
-| Tab           | What it does                                                                                       |
-| ------------- | -------------------------------------------------------------------------------------------------- |
-| **Home**      | Greeting, illustration, quick stats, and a tile for each feature.                                  |
-| **My Dreams** | Write a dream like a diary entry: what, by when, where, why, and a little step. Board or calendar. |
-| **Journal**   | Today's card gives you a prompt. Write a page, pick a mood, tick off today's steps.                |
-| **Progress**  | Dream timeline, mood line, gentle nudges, a habit dot grid, and optional calendar or GitHub.       |
-| **Future Me** | Letters from you in 1, 5, and 20 years, written from your real progress. Write back.               |
+| Tab             | What it does                                                                                       |
+| --------------- | -------------------------------------------------------------------------------------------------- |
+| **Home**        | Greeting, illustration, quick stats, and a tile for each feature.                                  |
+| **My Dreams**   | Write a dream like a diary entry: what, by when, where, why, and a little step. Board or calendar. |
+| **Journal**     | Today's card gives you a prompt. Write a page, pick a mood, tick off today's steps.                |
+| **Progress**    | Dream timeline, mood line, gentle nudges, a habit dot grid, and optional calendar or GitHub.       |
+| **Connections** | Every stitched piece, its live status, and what it adds.                                           |
+| **Future Me**   | Letters from you in 1, 5, and 20 years, written from your real progress. Write back.               |
 
 AI is optional. With no API key set, steps are drafted and letters are written by local logic, so
 the whole app still works.

@@ -18,6 +18,7 @@ import {
 import { dreamProgress } from "../lib/score.ts";
 import { TINTS, VALUES } from "../lib/types.ts";
 import type { Goal, Tint, Value } from "../lib/types.ts";
+import { DownloadDreams } from "./ConnectionsView.tsx";
 import { Icon } from "./Icons.tsx";
 import { StepRow } from "./Steps.tsx";
 import { AREA, Ring } from "./ui.tsx";
@@ -27,7 +28,7 @@ const EMPTY: DreamInput = {
   why: "",
   where: "",
   byDate: "",
-  tint: "peach",
+  tint: "blush",
   value: "ambition",
 };
 
@@ -363,12 +364,13 @@ function CalendarView({ app, today }: { app: AppApi; today: string }) {
         </div>
         <p className="muted small calendar-legend">
           <span className="cal-written inline" /> you wrote in your journal
-          <span className="cal-tick inline tint-sage" /> a little step you ticked off
-          <span className="cal-pill inline tint-peach">Dream</span> a dream's big day
+          <span className="cal-tick inline tint-navy" /> a little step you ticked off
+          <span className="cal-pill inline tint-blush">Dream</span> a dream's big day
         </p>
       </div>
 
       <aside className="upcoming">
+        <DownloadDreams app={app} label="Add dream dates to my calendar" />
         <p className="mini-label">Coming up</p>
         {upcoming.length === 0 ? (
           <p className="muted small">Give a dream a date and it shows up here.</p>

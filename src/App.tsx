@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { ConnectionsView } from "./components/ConnectionsView.tsx";
 import { DreamsView } from "./components/DreamsView.tsx";
 import { Header } from "./components/Header.tsx";
 import { Home } from "./components/Home.tsx";
@@ -40,9 +41,10 @@ export default function App() {
         {view === "journal" && <JournalView app={app} model={model} today={today} goTo={go} />}
         {view === "progress" && <ProgressView app={app} model={model} today={today} goTo={go} />}
         {view === "letters" && <LettersView app={app} model={model} today={today} />}
+        {view === "connections" && <ConnectionsView app={app} model={model} />}
       </main>
       <footer className="footer">
-        <span>Made with love. Your journal stays on this device.</span>
+        <span>Manifest · stitched together with care. Your journal stays on this device.</span>
         <span className="footer-links">
           {app.demo ? (
             <button type="button" className="link" onClick={() => app.setDemo(true)}>

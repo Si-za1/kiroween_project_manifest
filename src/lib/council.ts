@@ -1,4 +1,6 @@
 import type { Conflict } from "./conflicts.ts";
+import type { Moon } from "./moon.ts";
+import type { Pattern } from "./patterns.ts";
 import type { ClaimResult, Status } from "./score.ts";
 import { windowPhrase } from "./score.ts";
 import type { Entry, Goal, ISODate, SelfId, Value } from "./types.ts";
@@ -57,6 +59,9 @@ export interface CouncilContext {
   dreams: { text: string; why: string; byDate: string; value: Value }[];
   claims: CouncilClaim[];
   conflicts: { title: string; detail: string; value: Value }[];
+  /** Findings from stitching sources together, for example mood and weather. */
+  patterns: { sources: string[]; headline: string; detail: string }[];
+  moon: { name: string; energy: string };
   voice: { favoriteWords: string[]; phrases: string[]; sample: string; avgSentenceWords: number };
   recentEntries: { date: ISODate; text: string }[];
 }
@@ -68,6 +73,8 @@ export function buildContext(
   conflicts: Conflict[],
   entries: Entry[],
   voice: VoiceProfile,
+  patterns: Pattern[] = [],
+  moon?: Moon,
 ): CouncilContext {
   const live = goals.filter((g) => !g.archived);
   const dreamText = new Map(live.map((g) => [g.id, g.text] as const));
@@ -93,6 +100,8 @@ export function buildContext(
       value: r.value,
     })),
     conflicts: conflicts.map((c) => ({ title: c.title, detail: c.detail, value: c.value })),
+    patterns: patterns.map((p) => ({ sources: p.sources, headline: p.headline, detail: p.detail })),
+    moon: { name: moon?.name ?? "", energy: moon?.energy ?? "" },
     voice: {
       favoriteWords: voice.favoriteWords,
       phrases: voice.phrases,
@@ -171,6 +180,21 @@ export function fallbackLetters(ctx: CouncilContext): { selfId: SelfId; text: st
         .join(" ");
     }
 
+    // Each self picks up one stitched finding that suits what it looks after.
+    const pattern =
+      self.id === "elder"
+        ? ctx.patterns.find((p) => p.sources.includes("Weather") || p.sources.includes("Moon"))
+        : self.id === "builder"
+          ? ctx.patterns.find((p) => p.sources.includes("Little steps"))
+          : undefined;
+    const patternLine = pattern
+      ? `\n\nHere's something I noticed: ${pattern.headline}. Use that.`
+      : "";
+    const moonLine =
+      self.id === "keeper" && ctx.moon.name
+        ? `\n\nTonight is a ${ctx.moon.name.toLowerCase()}. Maybe a good night to call someone.`
+        : "";
+
     const word = ctx.voice.phrases[0] ?? ctx.voice.favoriteWords[0];
     const voice = word ? `\n\nYou keep writing "${word}". I still say that sometimes.` : "";
     const away = self.years === 1 ? "one year" : self.years === 5 ? "five years" : "twenty years";
@@ -179,6 +203,8 @@ export function fallbackLetters(ctx: CouncilContext): { selfId: SelfId; text: st
       text:
         `Dear you,\n\n` +
         `It's me, from ${away} away. ${body}` +
+        patternLine +
+        moonLine +
         `\n\n${PERSPECTIVE[self.id]}` +
         voice +
         `\n\nWith love,\nMe, ${year + self.years}`,

@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
 import type { Status } from "../lib/score.ts";
 import type { Source, Tint, Value } from "../lib/types.ts";
+import { weatherKind } from "../lib/weather.ts";
 import type { UiIcon } from "./Icons.tsx";
 
-export type View = "home" | "dreams" | "journal" | "progress" | "letters";
+export type View = "home" | "dreams" | "journal" | "progress" | "letters" | "connections";
 
 export const VIEWS: { id: View; label: string; icon: UiIcon }[] = [
   { id: "home", label: "Home", icon: "home" },
@@ -11,6 +12,7 @@ export const VIEWS: { id: View; label: string; icon: UiIcon }[] = [
   { id: "journal", label: "Journal", icon: "book" },
   { id: "progress", label: "Progress", icon: "chart" },
   { id: "letters", label: "Future Me", icon: "envelope" },
+  { id: "connections", label: "Connections", icon: "link" },
 ];
 
 export const STATUS_LABEL: Record<Status, string> = {
@@ -31,9 +33,9 @@ export const SOURCE_LABEL: Record<Source, string> = {
 };
 
 export const AREA: Record<Value, { label: string; hint: string; tint: Tint }> = {
-  ambition: { label: "Growth", hint: "work, learning, making", tint: "peach" },
-  connection: { label: "Love", hint: "family, friends, people", tint: "rose" },
-  peace: { label: "Wellbeing", hint: "health, rest, calm", tint: "sage" },
+  ambition: { label: "Growth", hint: "work, learning, making", tint: "navy" },
+  connection: { label: "Love", hint: "family, friends, people", tint: "blush" },
+  peace: { label: "Wellbeing", hint: "health, rest, calm", tint: "sand" },
 };
 
 /** Circular progress ring, 0 to 1. */
@@ -125,4 +127,13 @@ export function greeting(now: Date = new Date()): string {
   if (h < 12) return "Good morning";
   if (h < 18) return "Good afternoon";
   return "Good evening";
+}
+
+export function weatherIcon(code: number): UiIcon {
+  const kind = weatherKind(code);
+  if (kind === "sunny") return "sun";
+  if (kind === "cloudy") return "cloud";
+  if (kind === "snowy") return "snow";
+  if (kind === "stormy") return "storm";
+  return "rain";
 }

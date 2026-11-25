@@ -4,10 +4,21 @@ Manifest is a cozy journaling and dream-planning web app. Tagline: **Write it do
 It turns what you want to manifest into little daily steps, shows your progress, and lets future
 versions of you write back.
 
-Built for the Kiro hackathon, category **Frankenstein**: it stitches together things that don't
-normally live in one app: a journal, a dream planner, a habit tracker, tarot-style prompt cards,
-and letters from your future self. The app says this out loud on the home page ("Stitched together
-from…"), and dashed "stitch" seams on cards are the visual nod to it.
+Built for the Kiro hackathon, category **Frankenstein**. Manifest stitches seven sources into one
+journal, and every stitch must produce something none of the pieces could alone:
+
+| Piece    | Source                                 | What the stitch makes                                            |
+| -------- | -------------------------------------- | ---------------------------------------------------------------- |
+| Journal  | Local storage                          | The heart. Pages, moods, dreams, steps.                          |
+| Weather  | Open-Meteo API (free, no key, browser) | Mood and weather patterns; today's sky on the page               |
+| Moon     | Astronomy maths, on device             | New and full moon ritual cards; mood and moon patterns           |
+| Calendar | .ics in and out                        | Steps that count themselves; dream dates exported with reminders |
+| GitHub   | GitHub REST API (server)               | Coding steps that count themselves                               |
+| AI       | OpenAI-compatible LLM (server)         | Steps from plain goals; Future Me letters                        |
+| Voice    | Web Speech API (browser)               | Speak a page; hear letters read aloud                            |
+
+The Home page shows the chain, and the **Connections** tab explains every stitch with live status.
+Insights on Progress name their sources ("Journal × Weather").
 
 ## Screens (tabs at the top)
 
@@ -19,7 +30,9 @@ from…"), and dashed "stitch" seams on cards are the visual nod to it.
 4. **Progress.** Stats, a dream timeline, a mood line, gentle nudges, a 14-day habit dot grid, and
    optional calendar or GitHub connections.
 5. **Future Me.** Letters from you in 1, 5, and 20 years. Each future self looks after one life
-   area (Growth, Love, Wellbeing), so they can kindly disagree. You can write back.
+   area (Growth, Love, Wellbeing), so they can kindly disagree. They mention stitched insights.
+   You can write back or listen to them.
+6. **Connections.** Every source, its status, what it adds, and controls to connect or disconnect.
 
 ## Principles
 

@@ -1,9 +1,5 @@
-import { useState } from "react";
-import type { ChangeEvent } from "react";
-import { setEvents, setGithub } from "../data/actions.ts";
 import type { Model } from "../data/selectors.ts";
 import type { AppApi } from "../data/useApp.ts";
-import { fetchGithubDays } from "../lib/api.ts";
 import {
   addDays,
   dayOfMonth,
@@ -13,7 +9,6 @@ import {
   relativeDay,
   weekdayLetter,
 } from "../lib/dates.ts";
-import { parseICS } from "../lib/ics.ts";
 import { dailyAmounts, dreamProgress } from "../lib/score.ts";
 import { averageMood, entriesBetween, moodSeries, streak } from "../lib/stats.ts";
 import type { Goal } from "../lib/types.ts";
@@ -137,7 +132,7 @@ function HabitGrid({ app, model, today }: { app: AppApi; model: Model; today: st
                 {amounts.map((n, i) => (
                   <td key={days[i]}>
                     <span
-                      className={`habit-dot tint-${tintOf.get(r.claim.goalId) ?? "peach"}${n > 0 ? " is-on" : ""}`}
+                      className={`habit-dot tint-${tintOf.get(r.claim.goalId) ?? "blush"}${n > 0 ? " is-on" : ""}`}
                       title={`${formatShort(days[i] ?? today)}: ${n > 0 ? `done${n > 1 ? ` ×${n}` : ""}` : "not yet"}`}
                     />
                   </td>
@@ -208,99 +203,48 @@ function MoodChart({ app, today }: { app: AppApi; today: string }) {
   );
 }
 
-function Connect({ app }: { app: AppApi }) {
-  const { evidence } = app.state;
-  const [user, setUser] = useState(evidence.githubUser);
-  const [busy, setBusy] = useState(false);
-  const [msg, setMsg] = useState("");
-  const [icsMsg, setIcsMsg] = useState("");
-
-  async function sync() {
-    const name = user.trim();
-    if (!name || busy) return;
-    setBusy(true);
-    setMsg("");
-    const res = await fetchGithubDays(name);
-    if (res.ok) {
-      app.update((s) => setGithub(s, name, res.days, new Date()));
-      setMsg(`Connected. Found ${Object.keys(res.days).length} active days.`);
-    } else setMsg(res.message);
-    setBusy(false);
-  }
-
-  async function onFile(e: ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    e.target.value = "";
-    if (!file) return;
-    if (file.size > 2_000_000) {
-      setIcsMsg("That file is over 2 MB. Try exporting a shorter date range.");
-      return;
-    }
-    const events = parseICS(await file.text());
-    app.update((s) => setEvents(s, events));
-    setIcsMsg(
-      events.length ? `Added ${events.length} calendar events.` : "No events found in that file.",
-    );
-  }
-
+function Insights({
+  model,
+  goTo,
+  hasWeather,
+}: {
+  model: Model;
+  goTo: (v: View) => void;
+  hasWeather: boolean;
+}) {
   return (
-    <div className="connect">
-      <div className="connect-card paper">
-        <h3>
-          <Icon name="calendar" size={18} /> Your calendar
-        </h3>
-        <p className="muted small">
-          Export your calendar as an <strong>.ics</strong> file (in Google Calendar, go to Settings,
-          then Import & export) and add it here. Steps tracked "from my calendar" count matching
-          events. The file stays on your device.
-        </p>
-        <input
-          className="file"
-          type="file"
-          accept=".ics,text/calendar"
-          aria-label="Add a calendar file"
-          onChange={(e) => void onFile(e)}
-        />
-        {icsMsg ? (
-          <p className="small" role="status">
-            {icsMsg}
+    <div className="insights">
+      {model.patterns.map((p) => (
+        <article key={p.id} className="insight paper stitched">
+          <p className="insight-sources">
+            {p.sources.map((src, i) => (
+              <span key={src}>
+                {i > 0 ? <span className="insight-x"> × </span> : null}
+                {src}
+              </span>
+            ))}
           </p>
-        ) : null}
-        {evidence.events.length > 0 ? (
-          <p className="muted small">{evidence.events.length} events connected</p>
-        ) : null}
-      </div>
-      <div className="connect-card paper">
-        <h3>
-          <Icon name="spark" size={18} /> GitHub, for coders
-        </h3>
-        <p className="muted small">
-          If one of your dreams is about coding, add your public GitHub username to count your
-          activity. No login needed.
-        </p>
-        <div className="row">
-          <input
-            className="input"
-            placeholder="username"
-            maxLength={39}
-            value={user}
-            onChange={(e) => setUser(e.target.value)}
-          />
-          <button
-            type="button"
-            className="btn btn-soft"
-            disabled={!user.trim() || busy}
-            onClick={() => void sync()}
-          >
-            {busy ? "Connecting…" : "Connect"}
+          <h3 className="insight-title">{p.headline}</h3>
+          <p className="small muted">{p.detail}</p>
+        </article>
+      ))}
+      {!hasWeather ? (
+        <article className="insight insight-empty paper">
+          <p className="insight-sources">Journal × Weather</p>
+          <h3 className="insight-title">Does the sky change your mood?</h3>
+          <p className="small muted">
+            Add your city and Manifest will look for patterns in your pages.
+          </p>
+          <button type="button" className="link small" onClick={() => goTo("connections")}>
+            Connect the weather <Icon name="chevron-right" size={14} />
           </button>
-        </div>
-        {msg ? (
-          <p className="small" role="status">
-            {msg}
-          </p>
-        ) : null}
-      </div>
+        </article>
+      ) : null}
+      {model.patterns.length === 0 && hasWeather ? (
+        <p className="muted">
+          Keep writing. Patterns appear once there are a few pages on different kinds of days.
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -337,20 +281,20 @@ export function ProgressView({ app, model, today, goTo }: Props) {
           icon="flame"
           value={String(days)}
           label={days === 1 ? "day in a row" : "days in a row"}
-          tint="peach"
+          tint="blush"
         />
-        <Stat icon="book" value={String(week.length)} label="pages this week" tint="butter" />
+        <Stat icon="book" value={String(week.length)} label="pages this week" tint="sand" />
         <Stat
           icon="check"
           value={`${stepsDone}/${model.results.length}`}
           label="steps on track"
-          tint="sage"
+          tint="navy"
         />
         <Stat
           icon="smile"
           value={mood === null ? "–" : `${mood.toFixed(1)}/5`}
           label="average mood"
-          tint="lavender"
+          tint="mauve"
         />
       </ul>
 
@@ -383,16 +327,19 @@ export function ProgressView({ app, model, today, goTo }: Props) {
         </div>
       </div>
 
+      <Section
+        title="Stitched insights"
+        kicker="What your pages, the sky, and the moon say together"
+      >
+        <Insights model={model} goTo={goTo} hasWeather={Boolean(app.state.evidence.weatherPlace)} />
+      </Section>
+
       <Section title="Habit tracker" kicker="Every dot is a day you showed up">
         {model.results.length === 0 ? (
           <p className="muted">Add little steps to your dreams to track them here.</p>
         ) : (
           <HabitGrid app={app} model={model} today={today} />
         )}
-      </Section>
-
-      <Section title="Connect" kicker="Optional: let your calendar do the counting">
-        <Connect app={app} />
       </Section>
     </div>
   );

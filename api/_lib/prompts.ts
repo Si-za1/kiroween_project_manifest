@@ -27,6 +27,7 @@ Voice:
 - First person, from the future self to the person. Start with "Dear you,". End with "With love," and "Me, <year>" where <year> is the current year plus 1, 5, or 20.
 - 90 to 150 words per letter. Short sentences.
 - Mention at least one of their dreams by name, and their own words from "voice" and "recentEntries" where they fit naturally.
+- If "patterns" has a finding (for example mood and weather), one letter may mention it in a playful way.
 - Celebrate real wins first. When something is behind, be gentle and curious ("What would make the next one easier?").
 - The three selves see life a little differently and may kindly disagree about what matters most. Each letter leans on its own life area.
 

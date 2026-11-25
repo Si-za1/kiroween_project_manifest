@@ -1,6 +1,6 @@
 import { addDays } from "../lib/dates.ts";
 import { shortHash } from "../lib/ids.ts";
-import type { AppState, CheckIn, Claim, Entry, Goal, ISODate } from "../lib/types.ts";
+import type { AppState, CheckIn, Claim, Entry, Goal, ISODate, WeatherDay } from "../lib/types.ts";
 
 export const DEMO_PERSONA = "Maya";
 
@@ -22,7 +22,7 @@ export function createDemoState(today: ISODate): AppState {
       why: "I want my hands and my work to finally meet. Every bowl I make feels like a tiny piece of who I am.",
       where: "My corner studio at home",
       byDate: addDays(today, 120),
-      tint: "peach",
+      tint: "blush",
       value: "ambition",
       createdAt: iso(20),
       archived: false,
@@ -33,7 +33,7 @@ export function createDemoState(today: ISODate): AppState {
       why: "To feel strong in my own body, and to prove to myself that I can finish things.",
       where: "The river path, early mornings",
       byDate: addDays(today, 200),
-      tint: "sage",
+      tint: "navy",
       value: "peace",
       createdAt: iso(20),
       archived: false,
@@ -55,7 +55,7 @@ export function createDemoState(today: ISODate): AppState {
       why: "Everything feels easier when I'm rested.",
       where: "",
       byDate: addDays(today, 45),
-      tint: "lavender",
+      tint: "mauve",
       value: "peace",
       createdAt: iso(14),
       archived: false,
@@ -212,12 +212,34 @@ export function createDemoState(today: ISODate): AppState {
     { back: 2, title: "Call with mom" },
   ].map((e) => ({ date: day(e.back), title: e.title, minutes: 120 }));
 
+  // Sample weather for Lisbon. Maya's brightest pages fall on sunny days, so the
+  // "mood and weather" pattern has something real to find. WMO codes: 0 clear, 3 overcast, 61 rain.
+  const powder: Record<number, number> = { 1: 3, 2: 0, 3: 0, 4: 1, 6: 61, 8: 63, 10: 0, 12: 3 };
+  const weatherDays: Record<ISODate, WeatherDay> = {};
+  for (let back = 0; back <= 30; back++) {
+    const code = powder[back] ?? [0, 2, 3, 61, 1][back % 5] ?? 0;
+    weatherDays[day(back)] = { code, tempC: code >= 61 ? 14 : code >= 2 ? 17 : 20 };
+  }
+
   return {
     goals,
     claims,
     entries,
     checkins,
     letters: [],
-    evidence: { githubUser: "", githubDays: {}, githubSyncedAt: null, events },
+    evidence: {
+      githubUser: "",
+      githubDays: {},
+      githubSyncedAt: null,
+      events,
+      weatherPlace: {
+        name: "Lisbon",
+        region: "Lisbon, Portugal",
+        latitude: 38.7167,
+        longitude: -9.1333,
+      },
+      weatherDays,
+      weatherSyncedAt: iso(0, 8),
+    },
   };
 }

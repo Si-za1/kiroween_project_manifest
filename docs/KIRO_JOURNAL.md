@@ -68,3 +68,14 @@ _Planned: GitHub CLI power for the repo workflow, Playwright for demo screenshot
   with the agent-browser tool. This caught real problems that typechecking could not: a missing icon
   glyph, a header band that didn't fit wrapped titles, cut-off step counts, and letters that
   repeated themselves and mixed up which dream a step belonged to.
+
+- **Making Frankenstein real.** The first versions only stitched ideas (journal plus tarot plus
+  letters), all running on one data source. The user asked whether that really fit the theme. The
+  fix was to stitch real, different sources and make each stitch produce something new: Open-Meteo
+  weather and on-device moon maths are joined with journal moods in `src/lib/patterns.ts`, calendar
+  data flows both in and out (`buildICS`), and the browser's speech API reads and writes pages.
+  Steering (`product.md`) now holds a table of every stitch, so new features have to justify which
+  pieces they join.
+- **Rebrand to quiet luxury.** New palette (#ece1db, #214669, #f275a6) with Cormorant Garamond and
+  Manrope. Card colors were renamed, and `store.ts` maps old saved names to new ones so existing
+  journals keep their colors.
