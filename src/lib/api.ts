@@ -64,14 +64,16 @@ export async function fetchGithubDays(user: string): Promise<GithubResult> {
     `/api/github?user=${encodeURIComponent(user)}`,
   );
   if (res.ok && res.data.days) return { ok: true, days: res.data.days };
-  if (!res.ok && res.status === 404)
+  if (!res.ok && res.error === "user_not_found") {
     return { ok: false, message: "That GitHub user was not found." };
+  }
   if (!res.ok && res.status === 429) {
     return { ok: false, message: "GitHub is rate limiting requests. Try again in a few minutes." };
   }
   return {
     ok: false,
-    message: "Could not reach GitHub. This needs the deployed app or `vercel dev`.",
+    message:
+      "GitHub needs the Manifest server, which this version doesn't have. It works on the Vercel deployment.",
   };
 }
 

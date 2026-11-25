@@ -213,6 +213,15 @@ export function addLetters(
   return { ...state, letters: [...state.letters, ...created] };
 }
 
+export function openLetter(state: AppState, letterId: string, now: Date): AppState {
+  return {
+    ...state,
+    letters: state.letters.map((l) =>
+      l.id === letterId && !l.openedAt ? { ...l, openedAt: now.toISOString() } : l,
+    ),
+  };
+}
+
 export function setReply(state: AppState, letterId: string, reply: string): AppState {
   return {
     ...state,

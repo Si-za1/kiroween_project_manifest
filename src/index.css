@@ -157,14 +157,10 @@ button {
   animation: rise 0.5s var(--ease) both;
 }
 
+/* Opacity only: a transform here would trap position: fixed overlays inside .main. */
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
   }
 }
 
@@ -2224,25 +2220,53 @@ button {
 .envelopes {
   list-style: none;
   padding: 0;
-  margin: 0 0 2rem;
+  margin: 0 0 1.75rem;
   display: grid;
-  gap: 1rem;
+  gap: 1.25rem;
   grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  perspective: 1400px;
+}
+
+.envelope-slot {
+  display: flex;
 }
 
 .envelope {
   position: relative;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.15rem;
-  padding: 3.5rem 1rem 1.35rem;
+  padding: 3.7rem 1rem 1.3rem;
+  border: 0;
   border-radius: 14px;
-  background: var(--navy);
+  background: linear-gradient(170deg, #2a557e, var(--navy) 55%, #1b3a58);
   color: var(--paper);
-  overflow: hidden;
   text-align: center;
+  cursor: pointer;
+  transform-style: preserve-3d;
   box-shadow: var(--shadow);
+  transition:
+    transform 0.45s var(--ease),
+    box-shadow 0.45s var(--ease);
+}
+
+.envelope:hover:not(:disabled),
+.envelope:focus-visible {
+  transform: translateY(-10px) rotateX(8deg) scale(1.02);
+  box-shadow:
+    0 30px 50px -22px rgba(33, 70, 105, 0.55),
+    0 0 0 1px rgba(242, 117, 166, 0.45);
+}
+
+.envelope:active:not(:disabled) {
+  transform: translateY(-4px) scale(0.99);
+}
+
+.envelope:disabled {
+  cursor: progress;
+  opacity: 0.85;
 }
 
 .envelope-flap {
@@ -2250,41 +2274,353 @@ button {
   top: 0;
   left: 0;
   right: 0;
-  height: 3.9rem;
-  background: rgba(255, 255, 255, 0.07);
+  height: 4.1rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
   clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  transition: transform 0.5s var(--ease);
 }
 
-.envelope-flap::after {
-  content: "";
+/* The flap lifts a little, as if the letter inside wants out. */
+.envelope:hover:not(:disabled) .envelope-flap,
+.envelope:focus-visible .envelope-flap {
+  transform: scaleY(0.8);
+}
+
+.envelope:hover:not(:disabled) .envelope-seal,
+.envelope:focus-visible .envelope-seal {
+  transform: translateX(-50%) scale(1.12);
+}
+
+.envelope-seal {
+  transition: transform 0.4s var(--ease);
   position: absolute;
   left: 50%;
-  bottom: 0.4rem;
-  width: 1.1rem;
-  height: 1.1rem;
+  bottom: -0.2rem;
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
   transform: translateX(-50%);
   border-radius: 50%;
   background: var(--pink);
+  color: var(--paper);
+  box-shadow: 0 4px 10px -3px rgba(0, 0, 0, 0.4);
+}
+
+.envelope.is-read .envelope-seal {
+  background: transparent;
+  color: var(--pink);
+  box-shadow: inset 0 0 0 1.5px var(--pink);
 }
 
 .envelope-year {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 2.1rem;
+  font-size: 2.2rem;
   color: var(--pink);
   line-height: 1;
-  margin-top: 0.4rem;
+  margin-top: 0.55rem;
 }
+
 .envelope-name {
   font-family: var(--font-display);
   font-style: italic;
   font-size: 1.35rem;
 }
+
 .envelope-area {
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(248, 243, 239, 0.65);
+}
+
+.envelope-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(248, 243, 239, 0.25);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  transition:
+    background 0.3s,
+    border-color 0.3s;
+}
+
+.envelope:hover:not(:disabled) .envelope-hint {
+  background: var(--pink);
+  border-color: var(--pink);
+}
+
+.envelope-new {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--pink);
+  box-shadow: 0 0 0 3px rgba(242, 117, 166, 0.3);
+}
+
+.envelope:hover:not(:disabled) .envelope-new {
+  background: var(--paper);
+}
+
+/* ---------- Opening a letter: envelope flies in, flap opens, sheet rises, letter unfolds ---------- */
+
+.reveal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  perspective: 1600px;
+}
+
+.reveal-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(20, 38, 58, 0.62);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  animation: fade-in 0.4s var(--ease) both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Hidden by default so reduced-motion users go straight to the letter. */
+.reveal-stage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  animation: stage 1.75s var(--ease) both;
+}
+
+@keyframes stage {
+  0%,
+  80% {
+    opacity: 1;
+    visibility: visible;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.env3d {
+  position: relative;
+  width: min(22rem, 80vw);
+  aspect-ratio: 16 / 10;
+  transform-style: preserve-3d;
+  animation: env-in 1.75s var(--ease) both;
+}
+
+@keyframes env-in {
+  0% {
+    transform: translateY(40vh) rotateX(55deg) rotateZ(-8deg) scale(0.6);
+  }
+  28% {
+    transform: translateY(0) rotateX(12deg) rotateZ(0) scale(1);
+  }
+  75% {
+    transform: translateY(6%) rotateX(0) scale(1);
+  }
+  100% {
+    transform: translateY(40%) rotateX(-20deg) scale(0.9);
+  }
+}
+
+.env3d-back,
+.env3d-pocket,
+.env3d-flap,
+.env3d-sheet {
+  position: absolute;
+  inset: 0;
+}
+
+.env3d-back {
+  border-radius: 14px;
+  background: #183552;
+}
+
+.env3d-sheet {
+  inset: 8% 7% 6%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 1.4rem 1.3rem;
+  border-radius: 8px;
+  background: var(--paper-pure);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  animation: sheet-rise 1.75s var(--ease) both;
+}
+
+@keyframes sheet-rise {
+  0%,
+  42% {
+    transform: translateY(0);
+  }
+  72%,
+  100% {
+    transform: translateY(-62%);
+  }
+}
+
+.env3d-line {
+  height: 0.38rem;
+  border-radius: 999px;
+  background: rgba(33, 70, 105, 0.15);
+}
+
+.env3d-line.short {
+  width: 55%;
+}
+
+.env3d-pocket {
+  border-radius: 14px;
+  background: linear-gradient(170deg, #2a557e, var(--navy) 60%);
+  clip-path: polygon(0 28%, 50% 62%, 100% 28%, 100% 100%, 0 100%);
+  box-shadow: inset 0 0 0 1px rgba(242, 117, 166, 0.2);
+}
+
+.env3d-flap {
+  height: 62%;
+  border-radius: 14px 14px 0 0;
+  background: linear-gradient(180deg, #31608c, #234b72);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  backface-visibility: visible;
+  animation: flap-open 1.75s var(--ease) both;
+}
+
+/* The flap swings up and back. z-index drops halfway so the sheet can rise in front of it. */
+@keyframes flap-open {
+  0%,
+  22% {
+    transform: rotateX(0);
+    z-index: 4;
+  }
+  40% {
+    z-index: 4;
+  }
+  41% {
+    z-index: 0;
+  }
+  45%,
+  100% {
+    transform: rotateX(178deg);
+    z-index: 0;
+  }
+}
+
+.env3d-seal {
+  position: absolute;
+  left: 50%;
+  bottom: 0.2rem;
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: var(--pink);
+  color: var(--paper);
+  animation: seal-pop 1.75s var(--ease) both;
+}
+
+@keyframes seal-pop {
+  0%,
+  16% {
+    transform: translateX(-50%) scale(1);
+  }
+  22% {
+    transform: translateX(-50%) scale(1.25);
+  }
+  28%,
+  100% {
+    transform: translateX(-50%) scale(0);
+  }
+}
+
+.reveal-letter {
+  position: relative;
+  width: min(38rem, 100%);
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+  border-radius: var(--radius);
+  transform-style: preserve-3d;
+}
+
+.reveal-letter .letter {
+  margin: 0;
+  box-shadow: 0 40px 80px -30px rgba(10, 25, 40, 0.6);
+}
+
+/* The letter unfolds from its top edge, like paper opening toward you. */
+.unfold {
+  transform-origin: top center;
+  animation: unfold 0.9s var(--ease) 1.35s both;
+}
+
+@keyframes unfold {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) rotateX(-82deg) scale(0.92);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(0) rotateX(8deg) scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.reveal-close {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  border: 1px solid var(--navy-20);
+  background: var(--paper-pure);
+  color: var(--navy);
+  cursor: pointer;
+  transform: rotate(45deg);
+  animation: fade-in 0.4s var(--ease) 1.9s both;
+}
+
+.reveal-close:hover {
+  border-color: var(--pink);
+  color: var(--pink-deep);
+}
+
+.reveal .letter-head {
+  padding-right: 2.5rem;
+}
+
+.letter-who {
+  flex: 1;
+  min-width: 0;
 }
 
 .ask {
@@ -2399,5 +2735,20 @@ button {
   }
   .stitch-chain::before {
     display: none;
+  }
+  .letter-head {
+    flex-wrap: wrap;
+  }
+  .letter-who {
+    flex: 1 1 10rem;
+  }
+  .listen {
+    margin-left: 4rem;
+  }
+  .reveal {
+    padding: 0.75rem;
+  }
+  .letter {
+    padding: 1.3rem 1.2rem 1rem;
   }
 }

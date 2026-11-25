@@ -101,6 +101,8 @@ export interface Letter {
   origin: "ai" | "local";
   createdAt: string;
   reply: string;
+  /** When the envelope was first opened. Missing means it's still sealed. */
+  openedAt?: string;
 }
 
 export interface AppState {
