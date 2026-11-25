@@ -6,6 +6,8 @@ import { streak } from "../lib/stats.ts";
 import { weatherKind, WEATHER_LABEL } from "../lib/weather.ts";
 import { Icon } from "./Icons.tsx";
 import type { UiIcon } from "./Icons.tsx";
+import { Sticker, Tape } from "./Doodles.tsx";
+import type { StickerKind } from "./Doodles.tsx";
 import { JournalingGirl } from "./Illustration.tsx";
 import { greeting, weatherIcon } from "./ui.tsx";
 import { VideoModal } from "./VideoModal.tsx";
@@ -18,13 +20,21 @@ interface Props {
   goTo: (v: View) => void;
 }
 
-const TILES: { view: View; icon: UiIcon; title: string; body: string; tint: string }[] = [
+const TILES: {
+  view: View;
+  icon: UiIcon;
+  title: string;
+  body: string;
+  tint: string;
+  sticker: StickerKind;
+}[] = [
   {
     view: "dreams",
     icon: "star",
     title: "My Dreams",
     body: "Write what you want, by when, and why. Break it into little steps.",
     tint: "blush",
+    sticker: "star",
   },
   {
     view: "journal",
@@ -32,6 +42,7 @@ const TILES: { view: View; icon: UiIcon; title: string; body: string; tint: stri
     title: "Journal",
     body: "A daily card, a quiet page, and today's steps. Type it or say it.",
     tint: "sand",
+    sticker: "flower",
   },
   {
     view: "progress",
@@ -39,6 +50,7 @@ const TILES: { view: View; icon: UiIcon; title: string; body: string; tint: stri
     title: "Progress",
     body: "Your timeline, your habits, your mood, and what the sky has to do with it.",
     tint: "navy",
+    sticker: "cloud",
   },
   {
     view: "letters",
@@ -46,6 +58,7 @@ const TILES: { view: View; icon: UiIcon; title: string; body: string; tint: stri
     title: "Future Me",
     body: "Letters from you in 1, 5, and 20 years, written from your real progress.",
     tint: "mauve",
+    sticker: "heart",
   },
 ];
 
@@ -89,14 +102,15 @@ export function Home({ app, model, today, goTo }: Props) {
           <p className="kicker">
             {greeting()} · {formatLong(today)}
           </p>
+          <p className="hero-dear">Dear me,</p>
           <h1 className="hero-title">
-            Write it down.
+            write it down,
             <br />
-            <em className="hero-accent">Watch it grow.</em>
+            <em className="hero-accent">watch it bloom.</em>
           </h1>
           <p className="lede">
-            A quiet journal that turns your dreams into little daily steps, reads the sky and the
-            moon alongside your mood, and lets future you write back.
+            A little journal for the life you're dreaming of. Turn wishes into tiny daily steps, let
+            the sky and the moon keep you company, and get letters back from future you.
           </p>
           <div className="cta-row">
             {isNew ? (
@@ -121,6 +135,8 @@ export function Home({ app, model, today, goTo }: Props) {
               </>
             )}
           </div>
+
+          <p className="psst">psst… future you is already rooting for you ♡</p>
 
           <ul className="hero-stats" aria-label="Today at a glance">
             <li>
@@ -167,7 +183,33 @@ export function Home({ app, model, today, goTo }: Props) {
           </ul>
         </div>
         <div className="hero-art">
-          <JournalingGirl />
+          <figure className="polaroid">
+            <Tape variant="check" className="tape-top" />
+            <div className="polaroid-photo">
+              <JournalingGirl />
+            </div>
+            <figcaption>me, on a slow sunday ♡</figcaption>
+          </figure>
+          <Sticker kind="heart" size={46} className="float-a" style={{ top: "4%", left: "-2%" }} />
+          <Sticker
+            kind="sparkle"
+            size={36}
+            className="float-b"
+            style={{ top: "-3%", right: "14%" }}
+          />
+          <Sticker
+            kind="flower"
+            size={50}
+            className="float-c"
+            style={{ bottom: "16%", right: "-3%" }}
+          />
+          <Sticker
+            kind="star"
+            size={40}
+            className="float-b"
+            style={{ bottom: "8%", left: "-3%" }}
+          />
+          <Sticker kind="bow" size={44} className="float-a" style={{ top: "38%", right: "-5%" }} />
         </div>
       </section>
 
@@ -179,11 +221,12 @@ export function Home({ app, model, today, goTo }: Props) {
             className={`tile tint-${t.tint}`}
             onClick={() => goTo(t.view)}
           >
+            <Tape variant={i % 2 ? "dots" : "pink"} className="tape-top" />
             <span className="tile-top">
               <span className="tile-icon">
                 <Icon name={t.icon} size={20} />
               </span>
-              <span className="tile-num">0{i + 1}</span>
+              <Sticker kind={t.sticker} size={34} className="tile-sticker" />
             </span>
             <span className="tile-title">{t.title}</span>
             <span className="tile-body">{t.body}</span>
@@ -194,10 +237,12 @@ export function Home({ app, model, today, goTo }: Props) {
         ))}
       </section>
 
-      <section className="stitch-strip paper" aria-label="What Manifest is stitched from">
+      <section className="stitch-strip paper" aria-label="What Dearly is stitched from">
         <div className="stitch-copy">
           <p className="kicker">Stitched together</p>
-          <h2 className="stitch-title">Seven pieces, one journal.</h2>
+          <h2 className="stitch-title">
+            Seven tiny pieces, <em>one sweet journal.</em>
+          </h2>
           <p className="muted small">
             Your words, the weather, the moon, your calendar, your code, an AI, and your voice. Each
             piece makes the others smarter.

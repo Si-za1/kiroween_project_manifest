@@ -115,6 +115,16 @@ export function relativeDay(target: ISODate, today: ISODate): string {
   return days > 0 ? `in ${label}` : `${label} ago`;
 }
 
+/** For example "Tuesday, Nov 24". */
+export function formatWeekdayShort(d: ISODate): string {
+  return new Date(toUTC(d)).toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  });
+}
+
 export function formatShort(d: ISODate): string {
   return new Date(toUTC(d)).toLocaleDateString("en-US", {
     month: "short",

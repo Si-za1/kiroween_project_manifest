@@ -79,3 +79,9 @@ _Planned: GitHub CLI power for the repo workflow, Playwright for demo screenshot
 - **Rebrand to quiet luxury.** New palette (#ece1db, #214669, #f275a6) with Cormorant Garamond and
   Manrope. Card colors were renamed, and `store.ts` maps old saved names to new ones so existing
   journals keep their colors.
+- **Renamed to Dearly, with a scrapbook look.** The app already greeted people with "Dear diary"
+  and "Dear you", so the name followed. The colors stayed; a scrapbook layer was added on top at
+  the end of `index.css`: washi tape on cards, slight tilts, stickers (`Doodles.tsx`), a polaroid
+  on Home, sticky-note tiles, a notebook margin, and Caveat for handwriting. On small screens the
+  tilts and floating stickers are switched off so nothing overflows. Saved data keys still start
+  with `manifest.` so existing journals keep working.

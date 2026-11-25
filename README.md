@@ -1,6 +1,6 @@
-# Manifest
+# Dearly
 
-> Write it down. Watch it grow.
+> Dear me, write it down, watch it bloom.
 
 **Live app:** https://www.sizaadhikari.com.np/kiroween_project_manifest/
 **Demo video:** [public/media/manifest-demo.mp4](public/media/manifest-demo.mp4) (86 seconds), also
@@ -8,7 +8,7 @@ behind **Watch the demo** on the app's Home page
 **Category:** Kiro hackathon, Frankenstein
 **License:** [MIT](LICENSE)
 
-Manifest is a quiet dream journal. You write what you want to manifest, break it into little daily
+Dearly is a sweet, scrapbook-style dream journal. You write what you want to manifest, break it into little daily
 steps, and journal each day from a prompt card. Future versions of you then write back, using your
 real progress. It's a Frankenstein app: seven unrelated pieces stitched into one, and each stitch
 produces something none of the pieces could on their own.
@@ -110,7 +110,8 @@ environment variables), or edit the fallback in [`src/config.ts`](src/config.ts)
 
 Vite, React 19, and TypeScript (strict). Vercel Functions for the server. Open-Meteo for weather,
 the Web Speech API for voice, and inline SVG for every illustration and icon (no image files).
-Fonts are Cormorant Garamond and Manrope from Google Fonts.
+Fonts are Cormorant Garamond, Manrope, and Caveat (handwriting) from Google Fonts. The look is a
+Pinterest-style scrapbook: washi tape, stickers, a polaroid, sticky notes, and a notebook margin.
 
 ## Built with Kiro
 

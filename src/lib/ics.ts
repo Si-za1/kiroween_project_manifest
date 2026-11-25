@@ -120,7 +120,7 @@ export function buildICS(events: ExportEvent[], stamp: Date = new Date()): strin
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Manifest//Dream journal//EN",
+    "PRODID:-//Dearly//Dream journal//EN",
     "CALSCALE:GREGORIAN",
   ];
   for (const e of events) {

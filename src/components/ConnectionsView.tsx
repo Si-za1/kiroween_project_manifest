@@ -250,7 +250,7 @@ export function DownloadDreams({ app, label }: { app: AppApi; label: string }) {
         uid: g.id,
         date: g.byDate,
         title: `✦ ${g.text}`,
-        description: g.why ? `Why it matters: ${g.why}` : "A dream from my Manifest journal.",
+        description: g.why ? `Why it matters: ${g.why}` : "A dream from my Dearly journal.",
       })),
     );
     const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
@@ -347,10 +347,10 @@ export function ConnectionsView({ app, model }: { app: AppApi; model: Model }) {
 
   return (
     <div>
-      <p className="kicker">How Manifest is stitched together</p>
+      <p className="kicker">How Dearly is stitched together</p>
       <h1 className="page-title">Connections</h1>
       <p className="lede">
-        Manifest is a patchwork. A journal, the sky, the moon, your calendar, your code, an AI, and
+        Dearly is a patchwork. A journal, the sky, the moon, your calendar, your code, an AI, and
         your own voice are stitched into one place, and each one makes the others smarter.
       </p>
 

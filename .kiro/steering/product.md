@@ -1,10 +1,12 @@
-# Product: Manifest
+# Product: Dearly
 
-Manifest is a cozy journaling and dream-planning web app. Tagline: **Write it down. Watch it grow.**
+Dearly is a sweet journaling and dream-planning web app (formerly "Manifest"). Tagline:
+**Dear me, I'm becoming you.** The name comes from how everything in it is addressed: "Dear
+diary" on the page and "Dear you" in the letters from future selves.
 It turns what you want to manifest into little daily steps, shows your progress, and lets future
 versions of you write back.
 
-Built for the Kiro hackathon, category **Frankenstein**. Manifest stitches seven sources into one
+Built for the Kiro hackathon, category **Frankenstein**. Dearly stitches seven sources into one
 journal, and every stitch must produce something none of the pieces could alone:
 
 | Piece    | Source                                 | What the stitch makes                                            |
