@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Model } from "../data/selectors.ts";
 import type { AppApi } from "../data/useApp.ts";
 import { formatLong, relativeDay } from "../lib/dates.ts";
@@ -7,6 +8,7 @@ import { Icon } from "./Icons.tsx";
 import type { UiIcon } from "./Icons.tsx";
 import { JournalingGirl } from "./Illustration.tsx";
 import { greeting, weatherIcon } from "./ui.tsx";
+import { VideoModal } from "./VideoModal.tsx";
 import type { View } from "./ui.tsx";
 
 interface Props {
@@ -56,6 +58,15 @@ export function Home({ app, model, today, goTo }: Props) {
     .sort((a, b) => (a.byDate < b.byDate ? -1 : 1))[0];
   const days = streak(state.entries, today);
   const ev = state.evidence;
+  const [watching, setWatching] = useState(false);
+  const watchButton = (
+    <button type="button" className="btn btn-ghost btn-watch" onClick={() => setWatching(true)}>
+      <span className="play-dot" aria-hidden="true">
+        <Icon name="play" size={12} />
+      </span>
+      Watch the demo
+    </button>
+  );
 
   const stitches: { icon: UiIcon; label: string; on: boolean }[] = [
     { icon: "book", label: "Journal", on: true },
@@ -96,6 +107,7 @@ export function Home({ app, model, today, goTo }: Props) {
                 <button type="button" className="btn btn-soft" onClick={() => app.setDemo(true)}>
                   Peek at a demo
                 </button>
+                {watchButton}
               </>
             ) : (
               <>
@@ -105,6 +117,7 @@ export function Home({ app, model, today, goTo }: Props) {
                 <button type="button" className="btn btn-soft" onClick={() => goTo("progress")}>
                   See my progress
                 </button>
+                {watchButton}
               </>
             )}
           </div>
@@ -204,6 +217,8 @@ export function Home({ app, model, today, goTo }: Props) {
           ))}
         </ol>
       </section>
+
+      {watching ? <VideoModal onClose={() => setWatching(false)} /> : null}
     </div>
   );
 }
