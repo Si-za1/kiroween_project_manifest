@@ -1,32 +1,48 @@
-# Product: Manifest.git
+# Product: Manifest
 
-Manifest.git is a journaling and goal-reflection web app. Tagline: **Manifestation with receipts.
-Your future selves write back, and your data decides who's lying.**
+Manifest is a cozy journaling and dream-planning web app. Tagline: **Write it down. Watch it grow.**
+It turns what you want to manifest into little daily steps, shows your progress, and lets future
+versions of you write back.
 
-Built for the Kiro hackathon, category **Frankenstein**: it stitches together things that do not
-normally belong together (manifestation and journaling, software testing and version control,
-tarot-style cards, LLM letters from future selves).
+Built for the Kiro hackathon, category **Frankenstein**. Manifest stitches seven sources into one
+journal, and every stitch must produce something none of the pieces could alone:
 
-## Core loop
+| Piece    | Source                                 | What the stitch makes                                            |
+| -------- | -------------------------------------- | ---------------------------------------------------------------- |
+| Journal  | Local storage                          | The heart. Pages, moods, dreams, steps.                          |
+| Weather  | Open-Meteo API (free, no key, browser) | Mood and weather patterns; today's sky on the page               |
+| Moon     | Astronomy maths, on device             | New and full moon ritual cards; mood and moon patterns           |
+| Calendar | .ics in and out                        | Steps that count themselves; dream dates exported with reminders |
+| GitHub   | GitHub REST API (server)               | Coding steps that count themselves                               |
+| AI       | OpenAI-compatible LLM (server)         | Steps from plain goals; Future Me letters                        |
+| Voice    | Web Speech API (browser)               | Speak a page; hear letters read aloud                            |
 
-1. **Charter.** The user writes goals in plain English. Each goal becomes an editable, testable
-   _claim_ (for example "3 workouts a week").
-2. **Daily card and entry.** A personalized prompt card, then a short journal entry saved as a
-   "commit" in the user's timeline.
-3. **Check-in and evidence.** Quick check-in (did I do it, mood, sleep) plus optional evidence:
-   public GitHub activity and an uploaded calendar `.ics` file.
-4. **Report card.** Each claim is on track or off track. Where words and actions disagree, show a
-   "conflict".
-5. **Council letters.** Future-self letters at 1, 5, and 20 years, grounded in real results and
-   written in the user's own voice. The selves disagree with each other. The user can write back.
+The Home page shows the chain, and the **Connections** tab explains every stitch with live status.
+Insights on Progress name their sources ("Journal × Weather").
+
+## Screens (tabs at the top)
+
+1. **Home.** Greeting, illustration, quick stats, and a tile for each feature.
+2. **My Dreams.** Write a dream like a journal entry: what, by when, where, why, and one little step.
+   Board view (cards) and Calendar view (month grid with dream dates, journal days, and ticked steps).
+3. **Journal.** Today's card gives a prompt. Write a page, pick a mood, tick off today's steps.
+   Past pages below.
+4. **Progress.** Stats, a dream timeline, a mood line, gentle nudges, a 14-day habit dot grid, and
+   optional calendar or GitHub connections.
+5. **Future Me.** Letters from you in 1, 5, and 20 years. Each future self looks after one life
+   area (Growth, Love, Wellbeing), so they can kindly disagree. They mention stitched insights.
+   You can write back or listen to them.
+6. **Connections.** Every source, its status, what it adds, and controls to connect or disconnect.
 
 ## Principles
 
-- The user never needs to code. Git language is theme and metaphor only.
-- Local-first. Journals live in the browser (IndexedDB). No accounts. Nothing is sent to a server
-  except what the LLM needs for a single request.
-- A **demo mode** with a pre-seeded persona must work with no login, so judges can try everything.
-- Honest, not harsh. Conflicts are shown with care, never as shaming.
+- **Plain words for everyone.** No software or git terms in the UI. Use dream, little step, page,
+  progress, nudge, letter.
+- **Encouraging, never judgmental.** Celebrate wins first. When something is behind, be gentle and
+  curious.
+- Local-first. Everything lives on the device. No accounts.
+- A **demo mode** (Maya's journal) must work with no login or API key, so judges can try everything.
+- AI is optional. Every AI feature has a local fallback.
 
 ## Out of scope
 

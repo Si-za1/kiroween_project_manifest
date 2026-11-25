@@ -1,23 +1,41 @@
-# Manifest.git
+# Manifest
 
-> Manifestation with receipts. Your future selves write back, and your data decides who's lying.
+> Write it down. Watch it grow.
 
-Manifest.git is a journaling and goal-reflection web app. You write your goals in plain English,
-the app turns them into checkable claims, compares them with real evidence, and lets future
-versions of you write back. It is a submission for the Kiro hackathon, **Frankenstein** category.
+Manifest is a cozy journal that turns your dreams into little daily steps, shows how far you've
+come, and lets future versions of you write back. It is stitched together from seven pieces:
 
-**Status:** project scaffold. Features are being built spec by spec (see `.kiro/specs`).
+| Piece    | Powered by                                          | What the stitch makes                                  |
+| -------- | --------------------------------------------------- | ------------------------------------------------------ |
+| Journal  | Your device                                         | Pages, moods, dreams, and little steps                 |
+| Weather  | [Open-Meteo](https://open-meteo.com) (free, no key) | "You glow on sunny days" style mood patterns           |
+| Moon     | Astronomy maths on your device                      | New and full moon ritual cards, moon and mood patterns |
+| Calendar | `.ics` import and export                            | Steps that count themselves, dream dates as reminders  |
+| GitHub   | GitHub REST API                                     | Coding steps that count themselves                     |
+| AI       | Any OpenAI-compatible model                         | Steps from plain goals, letters from Future Me         |
+| Voice    | Web Speech API in the browser                       | Speak your pages, hear your letters                    | It is a submission for the Kiro hackathon, **Frankenstein** category. |
 
-## How it works
+**Status:** first working version. Every feature below is in place and is being refined.
 
-1. **Charter.** Write goals. Each becomes an editable claim, such as "3 workouts a week".
-2. **Daily card and entry.** A personalized prompt, then a short journal entry.
-3. **Check-in and evidence.** Quick check-in, plus optional public GitHub activity and a calendar
-   `.ics` upload.
-4. **Report card.** See which claims are on track, and where your words and actions disagree.
-5. **Council letters.** Letters from you at 1, 5, and 20 years out, grounded in your real results.
+## Try it
 
-Journals stay in your browser. There are no accounts.
+1. Open the app and choose **Peek at a demo**. It loads Maya's journal with two weeks of history,
+   so every screen has something to show. No account and no API key needed.
+2. Or choose **Write my first dream** and start your own.
+
+## Screens
+
+| Tab             | What it does                                                                                       |
+| --------------- | -------------------------------------------------------------------------------------------------- |
+| **Home**        | Greeting, illustration, quick stats, and a tile for each feature.                                  |
+| **My Dreams**   | Write a dream like a diary entry: what, by when, where, why, and a little step. Board or calendar. |
+| **Journal**     | Today's card gives you a prompt. Write a page, pick a mood, tick off today's steps.                |
+| **Progress**    | Dream timeline, mood line, gentle nudges, a habit dot grid, and optional calendar or GitHub.       |
+| **Connections** | Every stitched piece, its live status, and what it adds.                                           |
+| **Future Me**   | Letters from you in 1, 5, and 20 years, written from your real progress. Write back.               |
+
+AI is optional. With no API key set, steps are drafted and letters are written by local logic, so
+the whole app still works.
 
 ## Tech stack
 
