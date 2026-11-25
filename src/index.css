@@ -2565,6 +2565,25 @@ button {
   transform-style: preserve-3d;
 }
 
+/* A slim, on-brand scrollbar so long letters don't show a plain grey bar. */
+.reveal-letter {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(33, 70, 105, 0.28) transparent;
+}
+
+.reveal-letter::-webkit-scrollbar {
+  width: 6px;
+}
+
+.reveal-letter::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(33, 70, 105, 0.28);
+}
+
+.reveal-letter::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 .reveal-letter .letter {
   margin: 0;
   box-shadow: 0 40px 80px -30px rgba(10, 25, 40, 0.6);
