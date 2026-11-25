@@ -2,7 +2,7 @@
 
 > Write it down. Watch it grow.
 
-**Live app:** https://si-za1.github.io/kiroween_project_manifest/
+**Live app:** https://www.sizaadhikari.com.np/kiroween_project_manifest/
 **Category:** Kiro hackathon, Frankenstein
 **License:** [MIT](LICENSE)
 
@@ -25,7 +25,7 @@ produces something none of the pieces could on their own.
 
 No account, login, or API key is needed.
 
-1. Open the [live app](https://si-za1.github.io/kiroween_project_manifest/) and click
+1. Open the [live app](https://www.sizaadhikari.com.np/kiroween_project_manifest/) and click
    **Peek at a demo**. It loads Maya's journal with two weeks of history.
 2. **Journal:** today's card (moon phases trigger ritual cards), the weather line, a lined page,
    and the microphone button for voice typing (Chrome, Edge, or Safari).
