@@ -126,7 +126,8 @@ The [`.kiro`](.kiro) directory at the root holds what was used to build this pro
   writes that contain API keys, in [`.kiro/hooks`](.kiro/hooks).
 - **Custom agent:** `council-writer` reviews the prompts behind the Future Me letters.
 
-See [docs/KIRO_JOURNAL.md](docs/KIRO_JOURNAL.md) for how each Kiro feature was used along the way.
+See [docs/KIRO_JOURNAL.md](docs/KIRO_JOURNAL.md) for how each Kiro feature was used along the way,
+and [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md) for the demo video script.
 
 ## Privacy
 

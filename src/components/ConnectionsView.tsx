@@ -3,6 +3,7 @@ import type { ChangeEvent, ReactNode } from "react";
 import { disconnect, setEvents, setGithub, setWeather } from "../data/actions.ts";
 import type { Model } from "../data/selectors.ts";
 import type { AppApi } from "../data/useApp.ts";
+import { AI_NAME } from "../config.ts";
 import { aiStatus, fetchGithubDays } from "../lib/api.ts";
 import { formatShort } from "../lib/dates.ts";
 import { buildICS, parseICS } from "../lib/ics.ts";
@@ -333,7 +334,11 @@ const SEAMS: { a: string; b: string; makes: string }[] = [
   { a: "Journal", b: "Moon", makes: "New and full moon rituals on your daily card" },
   { a: "Little steps", b: "Calendar + GitHub", makes: "Steps that count themselves" },
   { a: "Dreams", b: "Calendar", makes: "Dream dates and reminders in your own calendar" },
-  { a: "Everything", b: "AI", makes: "Letters from Future Me, built from your real progress" },
+  {
+    a: "Everything",
+    b: "Gemini AI",
+    makes: "Letters from Future Me, built from your real progress",
+  },
   { a: "Journal + Letters", b: "Voice", makes: "Speak your pages and hear your letters" },
 ];
 
@@ -392,17 +397,19 @@ export function ConnectionsView({ app, model }: { app: AppApi; model: Model }) {
         <GithubOrgan app={app} />
         <Organ
           icon="sparkles"
-          name="AI"
-          via="Any OpenAI-compatible model · on the server"
+          name="AI · Gemini"
+          via={`${AI_NAME} · on the server`}
           state={ai ? "on" : "local"}
           status={
             ai === undefined
               ? "Checking…"
               : ai
-                ? "Connected"
-                : "Not set up, so letters are written on your device"
+                ? `Connected to ${AI_NAME}`
+                : ai === false
+                  ? "Not set up yet, so letters are written on your device"
+                  : "Gemini runs on the full version. Here, letters are written on your device."
           }
-          gives="Turns plain goals into little steps and writes your Future Me letters. Only a short summary is sent."
+          gives="Turns plain goals into little steps and writes your Future Me letters. Only a short summary and your last 5 pages are sent, never your whole journal."
         />
         <Organ
           icon="mic"

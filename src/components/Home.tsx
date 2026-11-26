@@ -136,8 +136,6 @@ export function Home({ app, model, today, goTo }: Props) {
             )}
           </div>
 
-          <p className="psst">psst… future you is already rooting for you ♡</p>
-
           <ul className="hero-stats" aria-label="Today at a glance">
             <li>
               <Icon name="moon" size={16} />
