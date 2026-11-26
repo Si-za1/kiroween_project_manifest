@@ -1,8 +1,8 @@
 # Dearly demo video script
 
-Target length: about 3 minutes, and never more than 4. Judges often stop watching at 3 minutes, so
-the most important parts (the app working and the Frankenstein stitches) come first, and the Kiro
-section fits before 3:00. The last 30 seconds are buffer.
+Target length: about 3 minutes 30 seconds, and never more than 4. Judges often stop watching at 3
+minutes, so the problem, the app working, and the Frankenstein stitches all come first, and the
+Kiro section starts before 3:00.
 
 Read the **Say** lines in your own words. The **Do** lines are what to click.
 
@@ -15,27 +15,43 @@ Read the **Say** lines in your own words. The **Do** lines are what to click.
 - Allow microphone access once before recording, so the permission pop-up isn't in the video.
 - Hide bookmarks and close other tabs. Turn on Do Not Disturb.
 - Have a second tab ready with the GitHub repo open on the `.kiro` folder.
+- Make the opening slide: two lines of navy text on a `#ece1db` background (Canva, Google Slides,
+  or Keynote all work). Cormorant Garamond italic matches the app.
 - Do one practice run. If you click **Reset demo** in the footer, Maya's journal starts fresh.
 
 ## Script
 
-### 0:00 to 0:15 · The hook (Home)
+### 0:00 to 0:20 · The problem
 
-**Do:** Start on Home. Move the mouse slowly over the polaroid.
+**Do:** Start on a plain cream screen, or a slide in the app's background color `#ece1db`, with
+one line at a time fading in, in navy:
 
-**Say:** "Most of us write goals down and never look at them again. Dearly is a little journal
-that turns a dream into tiny daily steps, and then lets future you write back."
+1. "Every year, we write down who we want to become."
+2. "And then the page goes quiet."
 
-### 0:15 to 0:35 · Why it's a Frankenstein
+Speak slowly, and leave a short pause after each sentence.
+
+**Say:** "Every year, we write down who we want to become, in a notebook, a notes app, or on a
+vision board. A few weeks later, the page goes quiet. We didn't stop caring. The dream just stopped
+talking back. Nobody noticed the small steps we took, and nobody reminded us why we started."
+
+### 0:20 to 0:30 · The answer (Home)
+
+**Do:** Cut to the Dearly Home page. Let "Dear me, write it down, watch it bloom." sit on screen
+for a second, then move the mouse slowly over the polaroid.
+
+**Say:** "So I made Dearly. A little journal that turns a dream into tiny daily steps, notices
+every one you take, and lets future you write back."
+
+### 0:30 to 0:45 · Why it's a Frankenstein
 
 **Do:** Click **Peek at a demo**. Scroll down to "Seven tiny pieces, one sweet journal".
 
-**Say:** "This is Maya's demo journal. Dearly stitches seven unrelated pieces into one app: your
-journal, live weather from Open-Meteo, moon phases calculated on the device, your calendar,
-GitHub, Google Gemini, and your own voice. Each stitch creates something none of them could do
-alone."
+**Say:** "This is Maya's demo journal. Dearly stitches seven unrelated pieces into one: your
+journal, live weather, the moon, your calendar, GitHub, Google Gemini, and your own voice. Each
+stitch makes something none of them could do alone."
 
-### 0:35 to 1:00 · My Dreams
+### 0:45 to 1:10 · My Dreams
 
 **Do:** Open **My Dreams**. Click **New dream**. Type the dream "Run my first 5K", pick a date, and
 write a one-line "why". Under "One little step that gets me there" type "Run 3 times a week".
@@ -46,7 +62,7 @@ for two seconds.
 turns it into something it can actually count: three runs a week. Here are my dreams on a
 calendar, and with one click the dream dates go into Google or Apple Calendar as reminders."
 
-### 1:00 to 1:35 · Journal
+### 1:10 to 1:40 · Journal
 
 **Do:** Open **Journal**. Hover the daily card. Pick a mood. Click the microphone and say one
 sentence, for example "Today I finally finished the first glaze." Click **Save page**.
@@ -55,7 +71,7 @@ sentence, for example "Today I finally finished the first glaze." Click **Save p
 Today's weather is already on the page. I can type, or just speak my page. Then I tick off my
 little steps for today."
 
-### 1:35 to 2:05 · Progress
+### 1:40 to 2:10 · Progress
 
 **Do:** Open **Progress**. Scroll slowly through the dream timeline and the habit hearts, then stop
 on **Stitched insights**.
@@ -65,7 +81,7 @@ Stitched insights. Dearly joins my moods with the weather and the moon and finds
 'you glow on sunny days'. Each insight names the sources it joined, and it stays quiet until
 there's enough data to be fair."
 
-### 2:05 to 2:35 · Future Me
+### 2:10 to 2:35 · Future Me
 
 **Do:** Open **Future Me**. Hover an envelope so it lifts. Click it and let it open. Click
 **Listen** for three seconds, then close.
@@ -103,7 +119,7 @@ link below."
 ## If you're running long
 
 Cut in this order: the calendar view in My Dreams, the Listen button, then the Connections section.
-Keep Stitched insights and the Kiro section, because those match the judging criteria most
+Keep the opening problem, Stitched insights, and the Kiro section, because those match the judging criteria most
 directly.
 
 ## After recording
