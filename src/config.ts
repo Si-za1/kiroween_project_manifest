@@ -1,6 +1,12 @@
 // App-wide settings that are easy to change.
 
 /**
+ * The AI model shown on the Connections page. The server talks to it through LLM_BASE_URL and
+ * LLM_MODEL. Change this label if you switch providers.
+ */
+export const AI_NAME: string = import.meta.env.VITE_AI_NAME || "Google Gemini 2.5 Flash";
+
+/**
  * The demo video shown by "Watch the demo" on the Home page.
  *
  * To change it, either edit the fallback below, or set VITE_DEMO_VIDEO_URL at build time
