@@ -17,7 +17,10 @@ export const AI_NAME: string = import.meta.env.VITE_AI_NAME || "Google Gemini 2.
  */
 const BUNDLED_VIDEO = `${import.meta.env.BASE_URL}media/manifest-demo.mp4`;
 
-export const DEMO_VIDEO_URL: string = import.meta.env.VITE_DEMO_VIDEO_URL || BUNDLED_VIDEO;
+/** The demo on YouTube. Set VITE_DEMO_VIDEO_URL to BUNDLED_VIDEO's path to play the file instead. */
+const YOUTUBE_VIDEO = "https://youtu.be/xwV-W7IIGlI";
+
+export const DEMO_VIDEO_URL: string = import.meta.env.VITE_DEMO_VIDEO_URL || YOUTUBE_VIDEO;
 
 /** Still image shown before the bundled video plays. Not used for YouTube or Vimeo links. */
 export const DEMO_VIDEO_POSTER: string | undefined =
