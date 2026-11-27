@@ -3,8 +3,8 @@
 > Dear me, write it down, watch it bloom.
 
 **Live app:** https://www.sizaadhikari.com.np/kiroween_project_manifest/
-**Demo video:** [public/media/manifest-demo.mp4](public/media/manifest-demo.mp4) (86 seconds), also
-behind **Watch the demo** on the app's Home page
+**Full version with AI (Vercel):** https://kiroween-project-manifest.vercel.app
+**Demo video:** https://youtu.be/xwV-W7IIGlI, also behind **Watch the demo** on the app's Home page
 **Category:** Kiro hackathon, Frankenstein
 **License:** [MIT](LICENSE)
 
@@ -94,15 +94,17 @@ npx vercel dev
 
 ## Changing the demo video
 
-**Watch the demo** on the Home page plays `public/media/manifest-demo.mp4` by default. To use a
-YouTube or Vimeo link instead, set `VITE_DEMO_VIDEO_URL` at build time (for example in Vercel's
+**Watch the demo** on the Home page plays the [YouTube demo](https://youtu.be/xwV-W7IIGlI) by
+default. To use another YouTube or Vimeo link, or the bundled `public/media/manifest-demo.mp4`, set
+`VITE_DEMO_VIDEO_URL` at build time (for example in Vercel's
 environment variables), or edit the fallback in [`src/config.ts`](src/config.ts).
 
 ## Deploying
 
 - **GitHub Pages (static, no AI):** `.github/workflows/deploy-pages.yml` builds and publishes on
   every push to `main`. In the repo settings, set Pages to use **GitHub Actions** once.
-- **Vercel (full, with AI):** import the repository in Vercel. It detects Vite. Add `LLM_API_KEY`
+- **Vercel (full, with AI):** live at https://kiroween-project-manifest.vercel.app. To set up your
+  own, import the repository in Vercel. It detects Vite. Add `LLM_API_KEY`
   (plus `LLM_BASE_URL` and `LLM_MODEL` if you don't use OpenAI) in the project's environment
   variables. Keys are only read on the server and never reach the browser.
 
